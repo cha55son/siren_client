@@ -18,12 +18,14 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+api = SirenClient.root(options)
+api.links # View the resources you can access
 
-## Contributing
+#### Accessing
+api.<resource name>.all
+api.<resource name>.all.limit(5)
+api.<resource name>.find('resource id')
+api.<resource name>.first
 
-1. Fork it ( http://github.com/<my-github-username>/siren_client/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+#### Filtering
+api.<resource name>.where(...)
