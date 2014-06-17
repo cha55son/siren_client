@@ -1,6 +1,9 @@
-require "siren_client/version"
+dir = "siren_client"
+require "#{dir}/version"
+
+# Dependencies
 require "httparty"
 
-module SirenClient
-  # Your code goes here...
-end
+# SirenClient files
+require "#{dir}/base"
+require "#{dir}/resource"
