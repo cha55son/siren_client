@@ -1,49 +1,23 @@
 module SirenClient
-    class Resource
-        @data = nil
+  class Resource
+    include HTTParty
+    format :json
+    # debug_output
 
-        def initialize(data)
-            parse_data(data)
-        end
+    @data = nil
 
-        def entities
-
-        end
-
-        def actions
-
-        end
-
-        def links(link_name)
-            return nil if @data['links'].nil?
-            @data['links'].each do |link|
-                link['rel'].each do |rel|
-                    if rel == link_name
-                        data = HTTParty.get(link['href'])
-                        return Resource.new(data)
-                    end
-                end
-            end
-            raise "No link found with the name: #{link_name}"
-        end
-
-        def show(key=nil)
-            unless key.nil?
-                raise "No valid property named: #{key}" if @data[key.to_s].nil?
-                return @data[key.to_s].to_yaml
-            end
-            @data.to_yaml
-        end
-
-        private
-
-        def parse_data(data)
-            unless data.class == HTTParty::Response
-                raise "Cannot parse response. Invalid object, expecting HTTParty::Response"
-            end
-            @data = data.parsed_response
-        end
-
-        alias_method :describe, :show
+    def initialize(url)
+      unless url.class == String && !url.empty?
+        raise InvalidURIError, 'An invalid url was passed to SirenClient::Resource.new.'
+      end
+      self.class.base_uri url
+      begin
+        @data = self.class.get('/').parsed_response
+      rescue URI::InvalidURIError => e
+        raise InvalidURIError, e.message
+      rescue JSON::ParserError => e
+        raise InvalidResponseError, e.message
+      end
     end
+  end
 end

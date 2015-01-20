@@ -6,5 +6,6 @@ require 'yaml'
 require "httparty"
 
 # SirenClient files
-require "#{dir}/base"
+require "#{dir}/exceptions"
 require "#{dir}/resource"
+require "#{dir}/base"
