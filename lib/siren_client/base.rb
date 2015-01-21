@@ -8,6 +8,6 @@ module SirenClient
     # If it's not a string then check the hash 
     url = options[:url] if url.nil? && !options[:url].nil?
     raise ConfigError, "You must supply a valid url to SirenClient.get" if url.nil?
-    Resource.new(url)    
+    Entity.new(url)    
   end
 end
