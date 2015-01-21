@@ -23,33 +23,33 @@ module SirenClient
       elsif data.class == Hash
           @payload = data
       else
-          raise ArgumentError, "You must pass in either a data(String) or an entity(Hash) to SirenClient::Entity.new"
+          raise ArgumentError, "You must pass in either a url(String) or an entity(Hash) to SirenClient::Entity.new"
       end
-      parse_data()
+      parse_data
     end
 
     private
 
     def parse_data
       return if @payload.nil?
-      @classes = @payload['class'] || []
+      @classes    = @payload['class']      || []
       @properties = @payload['properties'] || { }
-      @entities = @payload['entities'] || []
-      @entities.map! do |hash|
-        Entity.new(hash)
+      @entities   = @payload['entities']   || []
+      @entities.map! do |data|
+        Entity.new(data)
       end
-      @rels = @payload['rel'] || []
+      @rels  = @payload['rel']   || []
       @links = @payload['links'] || []
-      @links.map! do |hash|
-        Link.new(hash)
+      @links.map! do |data|
+        Link.new(data)
       end
       @actions = @payload['actions'] || []
-      @actions.map! do |action|
-        Action.new(hash)
+      @actions.map! do |data|
+        Action.new(data)
       end
       @title = @payload['title'] || ''
-      @href = @payload['href'] || ''
-      @type = @payload['type'] || ''
+      @href  = @payload['href']  || ''
+      @type  = @payload['type']  || ''
     end
   end
 end

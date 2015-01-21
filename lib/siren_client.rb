@@ -8,6 +8,7 @@ require "httparty"
 # SirenClient files
 require "#{dir}/exceptions"
 require "#{dir}/link"
+require "#{dir}/field"
 require "#{dir}/action"
 require "#{dir}/entity"
 require "#{dir}/base"
