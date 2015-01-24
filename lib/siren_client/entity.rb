@@ -28,6 +28,37 @@ module SirenClient
       parse_data
     end
 
+    #### Enumerable support
+
+    # Returns the *i*th entity in this resource.
+    # Returns nil on failure.
+    def [](i)
+      @entities[i] rescue nil
+    end
+
+    # Iterates over the entities in this resource.
+    # Returns nil on failure.
+    def each(&block)
+      @entities.each(&block) rescue nil
+    end
+    
+    def method_missing(method, *args)
+      method_str = method.to_s
+      return @entities.length if method_str == 'length'
+      # Does it match a property, if so return the property value.
+      @properties.each do |key, prop|
+        return prop if method_str == key
+      end
+      # Does it match a link, if so execute it and return the entity.
+      @links.each do |key, link|
+        return self.class.new(link.href) if method_str == key
+      end
+      # Does it match an action, if so return the action.
+      @actions.each do |key, action|
+        return action if method_str == key
+      end
+    end
+
     private
 
     def parse_data
@@ -36,19 +67,31 @@ module SirenClient
       @properties = @payload['properties'] || { }
       @entities   = @payload['entities']   || []
       @entities.map! do |data|
-        Entity.new(data)
+        self.class.new(data)
       end
       @rels  = @payload['rel']   || []
       @links = @payload['links'] || []
       @links.map! do |data|
         Link.new(data)
       end
+      # Convert links into a hash
+      @links = @links.inject({}) do |hash, link|
+        next unless link.rels.length > 0
+        hash[link.rels[0]] = link
+        hash
+      end
       @actions = @payload['actions'] || []
       @actions.map! do |data|
         Action.new(data)
       end
+      # Convert actions into a hash
+      @actions = @actions.inject({}) do |hash, action|
+        next unless action.name
+        hash[action.name] = action
+        hash
+      end
       @title = @payload['title'] || ''
-      @href  = @payload['href']  || ''
+      @href  = (@payload['href']  || @links['self'].href || '') rescue nil
       @type  = @payload['type']  || ''
     end
   end

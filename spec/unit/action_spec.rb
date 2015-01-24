@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'helper/spec_helper'
 
 describe SirenClient::Action do
   let (:action_data) { {"name":"search","method":"GET","href":"http://argo-retail-demo.herokuapp.com/products","fields":[{"name":"search","type":"text"}]} }

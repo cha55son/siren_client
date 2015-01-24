@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'helper/spec_helper'
 
 describe SirenClient::Field do
   let (:field_data) { {"name":"search","type":"text"} }
