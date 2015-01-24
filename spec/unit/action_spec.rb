@@ -1,7 +1,7 @@
 require 'helper/spec_helper'
 
 describe SirenClient::Action do
-  let (:action_data) { {"name":"search","method":"GET","href":"http://argo-retail-demo.herokuapp.com/products","fields":[{"name":"search","type":"text"}]} }
+  let (:action_data) { {"name"=>"search","method"=>"GET","href"=>"http://example.com/products","fields"=>[{"name"=>"search","type"=>"text"}]} }
 
   describe '.new(data)' do
       it 'raise an error if wrong type is provided' do
@@ -50,6 +50,9 @@ describe SirenClient::Action do
     it 'is a string' do
       expect(action.type).to be_a String
     end
+    it 'defaults to \'application/x-www-form-urlencoded\'' do
+      expect(action.type).to eq('application/x-www-form-urlencoded')
+    end
   end
   describe '.fields' do
     it 'is an array' do
@@ -60,5 +63,12 @@ describe SirenClient::Action do
         expect(field).to be_a SirenClient::Field
       end
     end
+  end
+  describe '.where(params)' do
+    it 'executes the action without any parameters' do
+      # I'm expecting an error here, all I want to see is that the url it being traversed.
+      expect { action.where }.to raise_error
+    end
+    # The rest will be tested in the live specs.
   end
 end

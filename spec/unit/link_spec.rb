@@ -1,7 +1,7 @@
 require 'helper/spec_helper'
 
 describe SirenClient::Link do
-  let (:link_data) { {"rel":["self"],"href":"http://example.com/products/03283378000P"} }
+  let (:link_data) { {"rel"=>["self"],"href"=>"http://example.com/products/03283378000P"} }
 
   describe '.new(data)' do
       it 'raise an error if wrong type is provided' do

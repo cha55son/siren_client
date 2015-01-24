@@ -13,11 +13,22 @@ module SirenClient
       @method  = @payload['method'] || 'GET'
       @href    = @payload['href']   || ''
       @title   = @payload['title']  || ''
-      @type    = @payload['type']   || ''
+      @type    = @payload['type']   || 'application/x-www-form-urlencoded'
       @fields  = @payload['fields'] || []
       @fields.map! do |data|
         SirenClient::Field.new(data)
       end
+    end
+
+    def where(params = {})
+      options = { headers: {}, query: {}, body: {} }
+      if @method.downcase == 'get'
+        options['query'] = params
+      else
+        options['body'] = params
+      end
+      options[:headers]['Content-Type'] = @type
+      HTTP.call(@method, @href, options)
     end
   end
 end

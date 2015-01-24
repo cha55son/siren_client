@@ -1,8 +1,5 @@
 module SirenClient
   class Entity
-    include HTTParty
-    format :json
-    # debug_output
     attr_reader :payload, :classes, :properties, :entities, :rels, 
                 :links, :actions, :title, :href, :type
 
@@ -12,9 +9,8 @@ module SirenClient
         unless data.class == String && data.length > 0
             raise InvalidURIError, 'An invalid url was passed to SirenClient::Entity.new.'
         end
-        self.class.base_uri data
         begin
-            @payload = self.class.get('/').parsed_response
+            @payload = HTTP.get(data).parsed_response
         rescue URI::InvalidURIError => e
             raise InvalidURIError, e.message
         rescue JSON::ParserError => e
@@ -49,7 +45,7 @@ module SirenClient
       @properties.each do |key, prop|
         return prop if method_str == key
       end
-      # Does it match a link, if so execute it and return the entity.
+      # Does it match a link, if so traverse it and return the entity.
       @links.each do |key, link|
         return self.class.new(link.href) if method_str == key
       end
@@ -57,6 +53,7 @@ module SirenClient
       @actions.each do |key, action|
         return action if method_str == key
       end
+      raise NoMethodError, 'The method does not match a property, action, or link on SirenClient::Entity.'
     end
 
     private
@@ -77,7 +74,15 @@ module SirenClient
       # Convert links into a hash
       @links = @links.inject({}) do |hash, link|
         next unless link.rels.length > 0
-        hash[link.rels[0]] = link
+        # Don't use a rel name if it's generic like 'collection'
+        hash_rel = nil
+        generic_rels = ['collection']
+        link.rels.each do |rel|
+          next if generic_rels.include?(rel)
+          hash_rel = rel and break
+        end
+        # Ensure the rel name is a valid hash key
+        hash[hash_rel.underscore] = link
         hash
       end
       @actions = @payload['actions'] || []
@@ -87,7 +92,7 @@ module SirenClient
       # Convert actions into a hash
       @actions = @actions.inject({}) do |hash, action|
         next unless action.name
-        hash[action.name] = action
+        hash[action.name.underscore] = action
         hash
       end
       @title = @payload['title'] || ''

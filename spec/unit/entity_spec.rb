@@ -98,6 +98,11 @@ describe SirenClient::Entity do
       expect(entity.filter_concepts).to be_a SirenClient::Action
     end
   end
+  describe '.invalidkey' do
+    it 'will throw a NoMethodError' do
+      expect { entity.thisdoesntexist }.to raise_error(NoMethodError)
+    end
+  end
   describe '.title' do
     it 'is a string' do
       expect(entity.title).to be_a String

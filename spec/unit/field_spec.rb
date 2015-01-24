@@ -1,7 +1,7 @@
 require 'helper/spec_helper'
 
 describe SirenClient::Field do
-  let (:field_data) { {"name":"search","type":"text"} }
+  let (:field_data) { {"name"=>"search","type"=>"text"} }
 
   describe '.new(data)' do
       it 'raise an error if wrong type is provided' do
