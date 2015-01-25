@@ -9,17 +9,24 @@ end
 
 describe SirenClient do
   context 'when creating an entity' do
+    let (:headers_ent) { 
+      SirenClient.get({
+        url: URL,
+        headers: { "Accept" => "application/json" }
+      })
+    }
     it 'can set HTTP headers' do
       expect {
-        a_client = SirenClient.get({
-          url: URL, 
-          headers: { "Accept" => "application/json" }
-        })
-        expect(a_client.config[:headers]).to be_a Hash
-        expect(a_client.config[:headers]).to eq({ 
+        expect(headers_ent.config[:headers]).to be_a Hash
+        expect(headers_ent.config[:headers]).to eq({ 
           "Accept" => "application/json"
         })
       }.to_not raise_error
+    end
+    it 'it\'s actions inherit the same config' do
+      expect(headers_ent.filter_concepts.config[:headers]).to eq({
+        "Accept" => "application/json"
+      })
     end
     it 'can set basic auth' do
       expect {
@@ -36,7 +43,7 @@ describe SirenClient do
     end
   end
 
-  let (:client) { SirenClient.get(URL) }
+  let (:client) { SirenClient.get(url: URL, timeout: 2) }
   context 'when accessing the root entity' do
     it 'to return an entity' do
       expect(client).to be_a SirenClient::Entity
@@ -64,6 +71,8 @@ describe SirenClient do
     context 'with .where' do
       it 'to execute the action' do
         params = { search: 'obama' }
+        byebug
+
         expect(client.filter_concepts.where(params)).to be_a SirenClient::Entity
         expect(client.filter_concepts.where(params).length).to eq(1)
         expect(client.filter_concepts.where(params)[0]).to be_a SirenClient::Entity

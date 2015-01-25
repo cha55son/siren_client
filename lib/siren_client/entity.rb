@@ -88,7 +88,7 @@ module SirenClient
       end
       @actions = @payload['actions'] || []
       @actions.map! do |data|
-        Action.new(data)
+        Action.new(data, @config)
       end
       # Convert actions into a hash
       @actions = @actions.inject({}) do |hash, action|

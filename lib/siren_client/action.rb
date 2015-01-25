@@ -24,13 +24,13 @@ module SirenClient
     def where(params = {})
       options = { headers: {}, query: {}, body: {} }.merge @config
       if @method == 'get'
-        options['query'] = params
+        options[:query] = params
       else
-        options['body'] = params
+        options[:body] = params
       end
       options[:headers]['Content-Type'] = @type
       begin
-        Entity.new(HTTParty.call(@method, @href, options).parsed_response)
+        Entity.new(HTTParty.send(@method.to_sym, @href, options).parsed_response)
       rescue URI::InvalidURIError => e
         raise InvalidURIError, e.message
       rescue JSON::ParserError => e
