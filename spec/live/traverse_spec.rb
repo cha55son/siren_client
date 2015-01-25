@@ -9,14 +9,30 @@ end
 
 describe SirenClient do
   context 'when creating an entity' do
-    it 'can set the HTTP headers' do
-      headers = { "Accept": "application/json" }
-      a_client = SirenClient.get(url: URL, headers: headers)
-      expect(SirenClient::HTTP.headers).to be_a Hash
-      expect(SirenClient::HTTP.headers).to eq({ 
-        "Accept" => "application/json", 
-        "User-Agent" => "SirenClient v#{SirenClient::VERSION}"
-      })
+    it 'can set HTTP headers' do
+      expect {
+        a_client = SirenClient.get({
+          url: URL, 
+          headers: { "Accept" => "application/json" }
+        })
+        expect(a_client.config[:headers]).to be_a Hash
+        expect(a_client.config[:headers]).to eq({ 
+          "Accept" => "application/json"
+        })
+      }.to_not raise_error
+    end
+    it 'can set basic auth' do
+      expect {
+        a_client = SirenClient.get({
+          url: URL,
+          basic_auth: { username: 'billy', password: '1234' }
+        })
+        expect(a_client.config).to be_a Hash
+        expect(a_client.config[:basic_auth]).to eq({ 
+          username: "billy",
+          password: "1234"
+        })
+      }.to_not raise_error
     end
   end
 

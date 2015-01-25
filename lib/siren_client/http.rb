@@ -9,7 +9,6 @@ module SirenClient
     def self.headers=(headers={})
       return unless headers.is_a? Hash
       # Ensure the header keys are strings.
-      headers = convert_hash_keys(headers)
       headers.reject! { |k,v| k == "User-Agent" }
       @@headers.merge!(headers)
       nil
@@ -17,18 +16,16 @@ module SirenClient
 
     def self.call(method, url, params)
       dmethod = method.downcase
-      headers = convert_hash_keys(@@headers.merge(params[:headers] || params['headers'] || {}))
       self.class.send(dmethod, url, { 
-        headers: headers, 
+        headers: self.convert_hash_keys(@@headers.merge(params[:headers] || params['headers'] || {})), 
         query: params[:query], 
         body: params[:body] 
       })
-    end
+  end
 
-    private
+  private
 
-    def self.convert_hash_keys(hash)
-      hash.inject({}) { |h,(k,v)| h[k.to_s] = v; h }
-    end
+  def self.convert_hash_keys(hash)
+    headers.inject({}) { |h,(k,v)| h[k.to_s] = v; h }
   end
 end

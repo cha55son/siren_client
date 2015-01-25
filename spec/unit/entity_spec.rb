@@ -4,28 +4,36 @@ describe SirenClient::Entity do
   
   describe '.new(data)' do
     it 'raise an error if no param is provided' do
-        expect { SirenClient::Entity.new }.to raise_error(ArgumentError)
+      expect { SirenClient::Entity.new }.to raise_error(ArgumentError)
     end
     it 'raise an error if an invalid type is provided' do
-        expect { SirenClient::Entity.new([]) }.to raise_error(ArgumentError)
+      expect { SirenClient::Entity.new([]) }.to raise_error(ArgumentError)
     end
     it 'raise an error if an invalid url is provided' do
-        expect { SirenClient::Entity.new('error me') }.to raise_error(SirenClient::InvalidURIError)
+      expect { SirenClient::Entity.new('error me') }.to raise_error(SirenClient::InvalidURIError)
     end
     it 'raise an error if the url does not return json' do
-        expect { SirenClient::Entity.new('http://www.google.com') }.to raise_error(SirenClient::InvalidResponseError)
+      expect { SirenClient::Entity.new('http://www.google.com') }.to raise_error(SirenClient::InvalidResponseError)
     end
     # it 'can be instanciated with a proper url' do 
-    #     expect(SirenClient::Entity.new(valid_url)).to be_a SirenClient::Entity
+    #   expect(SirenClient::Entity.new(valid_url)).to be_a SirenClient::Entity
     # end
     it 'can be instanciated with a hash of data' do 
-        expect(SirenClient::Entity.new(siren_body)).to be_a SirenClient::Entity
+      expect(SirenClient::Entity.new(siren_body)).to be_a SirenClient::Entity
     end
   end
 
   let (:entity) { 
-    SirenClient::Entity.new(siren_body)
+    SirenClient::Entity.new(siren_body, { headers: { "Accept" => "application/json" } })
   }
+  describe '.config' do
+    it 'is a hash' do
+      expect(entity.config).to be_a Hash
+    end
+    it 'can access property in the config' do
+      expect(entity.config[:headers]['Accept']).to eq('application/json')
+    end
+  end
   describe '.payload' do
     it 'is a hash' do
       expect(entity.payload).to be_a Hash

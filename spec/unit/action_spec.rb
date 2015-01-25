@@ -12,7 +12,19 @@ describe SirenClient::Action do
       end
   end
 
-  let (:action) { SirenClient::Action.new(action_data) }
+  let (:action) { 
+    SirenClient::Action.new(action_data, { 
+      headers: { "Accept" => "application/json" } 
+    })
+  }
+  describe '.config' do
+    it 'is a hash' do
+      expect(action.config).to be_a Hash
+    end
+    it 'can access a property of the config' do
+      expect(action.config[:headers]['Accept']).to eq('application/json')
+    end
+  end
   describe '.payload' do
     it 'is a hash' do
       expect(action.payload).to be_a Hash
@@ -33,7 +45,7 @@ describe SirenClient::Action do
       expect(action.method).to be_a String
     end
     it 'defaults to GET' do
-      expect(SirenClient::Action.new({ }).method).to eq('GET')
+      expect(SirenClient::Action.new({ }).method).to eq('get')
     end
   end
   describe '.href' do

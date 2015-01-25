@@ -1,20 +1,21 @@
 module SirenClient
   class Entity
     attr_reader :payload, :classes, :properties, :entities, :rels, 
-                :links, :actions, :title, :href, :type
+                :links, :actions, :title, :href, :type, :config
 
 
-    def initialize(data)
+    def initialize(data, config={})
+      @config = { format: :json }.merge config 
       if data.class == String
         unless data.class == String && data.length > 0
             raise InvalidURIError, 'An invalid url was passed to SirenClient::Entity.new.'
         end
         begin
-            @payload = HTTP.get(data).parsed_response
+          @payload = HTTParty.get(data, @config).parsed_response
         rescue URI::InvalidURIError => e
-            raise InvalidURIError, e.message
+          raise InvalidURIError, e.message
         rescue JSON::ParserError => e
-            raise InvalidResponseError, e.message
+          raise InvalidResponseError, e.message
         end
       elsif data.class == Hash
           @payload = data
