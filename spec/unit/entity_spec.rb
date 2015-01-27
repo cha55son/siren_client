@@ -85,7 +85,6 @@ describe SirenClient::Entity do
     it 'can access a link' do
       expect(entity.links['self']).to be_a SirenClient::Link
     end
-    # Accessing a link directly has to be tested on a live server.
   end
   describe '.actions' do
     it 'is a hash' do
@@ -102,13 +101,42 @@ describe SirenClient::Entity do
     it 'can access an action' do
       expect(entity.actions['filter_concepts']).to be_a SirenClient::Action
     end
-    it 'can access an action directly on the entity' do
-      expect(entity.filter_concepts).to be_a SirenClient::Action
+  end
+  # This will be empty unless it's an embedded entity.
+  describe '.href' do
+    it 'is a string' do
+      expect(entity.href).to be_a String
+    end
+    it 'should be empty' do
+      expect(entity.href).to eq('')
+    end
+  end
+  # Similar to SirenClient::Link.go this function will create a 
+  # new entity from the .href method. For embedded entities only.
+  describe '.go' do
+    let (:graph) { entity[0] } 
+    it 'return nil if it\'s NOT an embedded entity' do
+      expect(entity.go).to eq(nil)
+    end
+    it 'initiate a request if it IS an embedded entity' do
+      expect { graph.entities[0].go }.to raise_error(SirenClient::InvalidURIError)
     end
   end
   describe '.invalidkey' do
     it 'will throw a NoMethodError' do
       expect { entity.thisdoesntexist }.to raise_error(NoMethodError)
+    end
+  end
+  describe '.validkey' do
+    let (:graph) { entity[0] } 
+    it 'can access an embedded entity within the entity' do
+      expect { graph.messages }.to raise_error(SirenClient::InvalidURIError)
+    end
+    it 'can access a link directly on the entity' do
+      expect { entity.next }.to raise_error(SirenClient::InvalidURIError)
+    end
+    it 'can access an action directly on the entity' do
+      expect(entity.filter_concepts).to be_a SirenClient::Action
     end
   end
   describe '.title' do

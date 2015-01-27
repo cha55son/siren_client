@@ -1,7 +1,7 @@
 module SirenClient
   class Entity
     attr_reader :payload, :classes, :properties, :entities, :rels, 
-                :links, :actions, :title, :type, :config
+                :links, :actions, :title, :type, :config, :href
 
 
     def initialize(data, config={})
@@ -38,6 +38,13 @@ module SirenClient
     def each(&block)
       @entities.each(&block) rescue nil
     end
+
+    ### Embedded entities only
+    
+    def go
+      return if self.href.empty?
+      self.class.new(self.href)
+    end
     
     def method_missing(method, *args)
       method_str = method.to_s
@@ -45,6 +52,10 @@ module SirenClient
       # Does it match a property, if so return the property value.
       @properties.each do |key, prop|
         return prop if method_str == key
+      end
+      # Does it match an embedded entity's class? 
+      @entities.each do |ent|
+        return ent.go if ent.href && ent.classes.include?(method_str)
       end
       # Does it match a link, if so traverse it and return the entity.
       @links.each do |key, link|
@@ -98,6 +109,8 @@ module SirenClient
       end
       @title = @payload['title'] || ''
       @type  = @payload['type']  || ''
+      # Should only be present for embedded entities.
+      @href  = @payload['href']  || ''
     end
   end
 end
