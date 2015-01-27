@@ -13,5 +13,9 @@ module SirenClient
       @title = @payload['title'] || ''
       @type  = @payload['type']  || ''
     end
+
+    def go
+      Entity.new(self.href)
+    end
   end
 end

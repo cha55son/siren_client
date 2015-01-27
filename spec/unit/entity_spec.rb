@@ -121,14 +121,6 @@ describe SirenClient::Entity do
       expect(entity.type).to be_a String
     end
   end
-  describe '.href' do
-    it 'is a string' do
-      expect(entity.href).to be_a String
-    end
-    it 'should match the href of the \'self\' link' do
-      expect(entity.href).to eq(entity.links['self'].href)
-    end
-  end
   describe '.length' do
     it 'can return the size of @entities' do
       expect(entity.length).to eq(1)

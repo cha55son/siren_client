@@ -1,7 +1,7 @@
 module SirenClient
   class Entity
     attr_reader :payload, :classes, :properties, :entities, :rels, 
-                :links, :actions, :title, :href, :type, :config
+                :links, :actions, :title, :type, :config
 
 
     def initialize(data, config={})
@@ -48,7 +48,7 @@ module SirenClient
       end
       # Does it match a link, if so traverse it and return the entity.
       @links.each do |key, link|
-        return self.class.new(link.href) if method_str == key
+        return link.go if method_str == key
       end
       # Does it match an action, if so return the action.
       @actions.each do |key, action|
@@ -97,7 +97,6 @@ module SirenClient
         hash
       end
       @title = @payload['title'] || ''
-      @href  = (@payload['href']  || @links['self'].href || '') rescue nil
       @type  = @payload['type']  || ''
     end
   end

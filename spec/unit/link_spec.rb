@@ -13,6 +13,12 @@ describe SirenClient::Link do
   end
 
   let (:link) { SirenClient::Link.new(link_data) }
+  describe '.go' do
+    it 'follows the link\'s href' do
+      # We just need to know that the link will make the request.
+      expect { link.go }.to raise_error(SirenClient::InvalidResponseError)
+    end
+  end
   describe '.payload' do
     it 'is a hash' do
       expect(link.payload).to be_a Hash

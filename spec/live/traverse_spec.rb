@@ -61,7 +61,7 @@ describe SirenClient do
     end
     it 'to follow the link' do
       expect(client.concepts).to be_a SirenClient::Entity
-      expect(concepts.href).to eq(URL + '/concepts')
+      expect(concepts.links['self'].href).to eq(URL + '/concepts')
     end
   end
   context 'when accessing an action' do
@@ -71,8 +71,6 @@ describe SirenClient do
     context 'with .where' do
       it 'to execute the action' do
         params = { search: 'obama' }
-        byebug
-
         expect(client.filter_concepts.where(params)).to be_a SirenClient::Entity
         expect(client.filter_concepts.where(params).length).to eq(1)
         expect(client.filter_concepts.where(params)[0]).to be_a SirenClient::Entity
