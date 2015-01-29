@@ -22,5 +22,30 @@ describe SirenClient do
       expect { SirenClient.get('http://google.com') }.to raise_error(SirenClient::InvalidResponseError)
     end
   end
+  describe '.logger(before)' do
+    it 'is a standard ruby logger instance' do
+      expect(SirenClient.logger).to be_a Logger
+    end
+  end
+  describe '.logger=' do
+    it 'raise an error if it does not respect the logger interface' do
+      expect { SirenClient.logger = "error" }.to raise_error
+    end
+    it 'accepts an instance that respects the logger interface' do
+      SirenClient.logger = Logger.new(STDOUT)
+      expect(SirenClient.logger).to be_a Logger
+    end
+  end
+  describe '.logger(after)' do
+    it 'responds to .info(str)' do
+      expect(SirenClient.logger.info("testing info")).to eq(true)
+    end
+    it 'responds to .warn(str)' do
+      expect(SirenClient.logger.warn("testing warn")).to eq(true)
+    end
+    it 'responds to .error(str)' do
+      expect(SirenClient.logger.error("testing error")).to eq(true)
+    end
+  end
   # Remainder will be tested in live spec
 end

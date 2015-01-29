@@ -24,7 +24,7 @@ describe SirenClient do
       }.to_not raise_error
     end
     it 'it\'s actions inherit the same config' do
-      expect(headers_ent.filter_concepts.config[:headers]).to eq({
+      expect(headers_ent.filter_concepts_get.config[:headers]).to eq({
         "Accept" => "application/json"
       })
     end
@@ -43,7 +43,13 @@ describe SirenClient do
     end
   end
 
-  let (:client) { SirenClient.get(url: URL, timeout: 2) }
+  let (:client) { 
+    SirenClient.get(
+      url: URL, 
+      timeout: 2,
+      headers: { "Accept" => "application/json" }
+    ) 
+  }
   context 'when accessing the root entity' do
     it 'to return an entity' do
       expect(client).to be_a SirenClient::Entity
@@ -64,17 +70,31 @@ describe SirenClient do
       expect(concepts.links['self'].href).to eq(URL + '/concepts')
     end
   end
-  context 'when accessing an action' do
+  context 'when accessing an action with GET' do
     it 'to return an action' do
-      expect(client.filter_concepts).to be_a SirenClient::Action
+      expect(client.filter_concepts_get).to be_a SirenClient::Action
     end
     context 'with .where' do
       it 'to execute the action' do
         params = { search: 'obama' }
-        expect(client.filter_concepts.where(params)).to be_a SirenClient::Entity
-        expect(client.filter_concepts.where(params).length).to eq(1)
-        expect(client.filter_concepts.where(params)[0]).to be_a SirenClient::Entity
-        expect(client.filter_concepts.where(params)[0].category).to eq('PERSON')
+        expect(client.filter_concepts_get.where(params)).to be_a SirenClient::Entity
+        expect(client.filter_concepts_get.where(params).length).to eq(1)
+        expect(client.filter_concepts_get.where(params)[0]).to be_a SirenClient::Entity
+        expect(client.filter_concepts_get.where(params)[0].category).to eq('PERSON')
+      end
+    end
+  end
+  context 'when accessing an action with POST' do
+    it 'to return an action' do
+      expect(client.filter_concepts_post).to be_a SirenClient::Action
+    end
+    context 'with .where' do
+      it 'to execute the action' do
+        params = { search: 'obama' }
+        expect(client.filter_concepts_post.where(params)).to be_a SirenClient::Entity
+        expect(client.filter_concepts_post.where(params).length).to eq(1)
+        expect(client.filter_concepts_post.where(params)[0]).to be_a SirenClient::Entity
+        expect(client.filter_concepts_post.where(params)[0].category).to eq('PERSON')
       end
     end
   end

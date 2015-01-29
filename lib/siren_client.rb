@@ -3,9 +3,10 @@ require "#{dir}/version"
 
 # Dependencies
 require 'json'
-require 'yaml'
+require 'logger'
 require 'httparty'
 require 'active_support/inflector'
+require 'active_support/core_ext/hash'
 
 # SirenClient files
 require "#{dir}/exceptions"

@@ -23,8 +23,32 @@ class TestServer < Sinatra::Base
         ],
         "actions": [  
           {  
-            "name":"filter-concepts",
+            "name":"filter-concepts-get",
             "method":"GET",
+            "href":"#{@@url}/concepts",
+            "title":"Get an optionally filtered list of Concepts",
+            "type":"application/x-www-form-urlencoded",
+            "fields":[  
+              {  
+                "name":"limit",
+                "title":"Max number of results in each page",
+                "type":"number"
+              },
+              {  
+                "name":"page",
+                "title":"Page number, starting at 1",
+                "type":"number"
+              },
+              {  
+                "name":"search",
+                "title":"Keyword search on concept text",
+                "type":"text"
+              }
+            ]
+          },
+          {  
+            "name":"filter-concepts-post",
+            "method":"POST",
             "href":"#{@@url}/concepts",
             "title":"Get an optionally filtered list of Concepts",
             "type":"application/x-www-form-urlencoded",

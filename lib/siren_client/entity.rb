@@ -11,6 +11,7 @@ module SirenClient
             raise InvalidURIError, 'An invalid url was passed to SirenClient::Entity.new.'
         end
         begin
+          SirenClient.logger.debug "GET #{data}"
           @payload = HTTParty.get(data, @config).parsed_response
         rescue URI::InvalidURIError => e
           raise InvalidURIError, e.message
@@ -25,22 +26,15 @@ module SirenClient
       parse_data
     end
 
-    #### Enumerable support
-
-    # Returns the *i*th entity in this resource.
-    # Returns nil on failure.
     def [](i)
-      @entities[i] rescue nil
+      @entities[i].href.empty? ? @entities[i] : @entities[i].go rescue nil
     end
 
-    # Iterates over the entities in this resource.
-    # Returns nil on failure.
     def each(&block)
       @entities.each(&block) rescue nil
     end
 
     ### Embedded entities only
-    
     def go
       return if self.href.empty?
       self.class.new(self.href)

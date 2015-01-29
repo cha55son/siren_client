@@ -30,6 +30,12 @@ module SirenClient
       end
       options[:headers]['Content-Type'] = @type
       begin
+        query = options[:query].empty? ? '' : ('?' + options[:query].to_query)
+        SirenClient.logger.debug "#{@method.upcase} #{@href}#{query}"
+        options[:headers].each do |k, v|
+          SirenClient.logger.debug "  #{k}: #{v}"
+        end
+        SirenClient.logger.debug '  ' + options[:body].to_query unless options[:body].empty?
         Entity.new(HTTParty.send(@method.to_sym, @href, options).parsed_response)
       rescue URI::InvalidURIError => e
         raise InvalidURIError, e.message

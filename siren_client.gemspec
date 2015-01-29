@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = SirenClient::VERSION
   spec.authors       = ["Chason Choate"]
   spec.email         = ["cha55son@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{A client to traverse Siren APIs https://github.com/kevinswiber/siren}
+  spec.description   = %q{SirenClient provides an ActiveRecord-like syntax to traverse Siren APIs.}
   spec.homepage      = "https://github.com/cha55son/siren_client"
   spec.license       = "MIT"
 

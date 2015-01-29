@@ -31,6 +31,22 @@ class TestServer < Sinatra::Base
       ]
     }
   EOF
+  post '/concepts/?' do
+    query = (request.query_string.length > 0 ? '?' : '') + request.query_string
+    <<-EOF
+      {
+        "class":["concepts","collection"],
+        "properties": { "count": 1 },
+        "entities": [#{CON_1}],
+        "links": [
+          {
+            "rel": ["self"],
+            "href": "#{@@url}/concepts#{query}"
+          }
+        ]
+      }
+    EOF
+  end
   get '/concepts/?' do
     query = (request.query_string.length > 0 ? '?' : '') + request.query_string
     # search=obama

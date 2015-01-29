@@ -161,6 +161,9 @@ describe SirenClient::Entity do
     it 'can get the last element' do
       expect(entity[-1]).to be_a SirenClient::Entity
     end
+    it 'causes embedded entities to be traversed' do
+      expect(entity[0]).to be_a SirenClient::Entity
+    end
   end
   describe '.each' do
     it 'can iterate over all the entities' do
