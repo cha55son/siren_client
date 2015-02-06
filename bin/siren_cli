@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'byebug'
+require 'siren_cli'
+
+SirenCLI::Shell.new
