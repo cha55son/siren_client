@@ -34,7 +34,7 @@ module SirenClient
       @entities.each(&block) rescue nil
     end
 
-    ### Embedded entities only
+    ### Entity sub-links only
     def go
       return if self.href.empty?
       self.class.new(self.href)
@@ -47,7 +47,7 @@ module SirenClient
       @properties.each do |key, prop|
         return prop if method_str == key
       end
-      # Does it match an embedded entity's class? 
+      # Does it match an entity sub-link's class? 
       @entities.each do |ent|
         return ent.go if ent.href && ent.classes.include?(method_str)
       end
@@ -103,7 +103,7 @@ module SirenClient
       end
       @title = @payload['title'] || ''
       @type  = @payload['type']  || ''
-      # Should only be present for embedded entities.
+      # Should only be present for entity sub-links.
       @href  = @payload['href']  || ''
     end
   end

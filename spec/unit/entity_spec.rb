@@ -102,7 +102,7 @@ describe SirenClient::Entity do
       expect(entity.actions['filter_concepts']).to be_a SirenClient::Action
     end
   end
-  # This will be empty unless it's an embedded entity.
+  # This will be empty unless it's an entity sub-link.
   describe '.href' do
     it 'is a string' do
       expect(entity.href).to be_a String
@@ -112,13 +112,13 @@ describe SirenClient::Entity do
     end
   end
   # Similar to SirenClient::Link.go this function will create a 
-  # new entity from the .href method. For embedded entities only.
+  # new entity from the .href method. For entity sub-links only.
   describe '.go' do
     let (:graph) { entity[0] } 
-    it 'return nil if it\'s NOT an embedded entity' do
+    it 'return nil if it\'s NOT an entity sub-link' do
       expect(entity.go).to eq(nil)
     end
-    it 'initiate a request if it IS an embedded entity' do
+    it 'initiate a request if it IS an entity sub-link' do
       expect { graph.entities[0].go }.to raise_error(SirenClient::InvalidURIError)
     end
   end
@@ -129,7 +129,7 @@ describe SirenClient::Entity do
   end
   describe '.validkey' do
     let (:graph) { entity[0] } 
-    it 'can access an embedded entity within the entity' do
+    it 'can access an entity sub-link within the entity' do
       expect { graph.messages }.to raise_error(SirenClient::InvalidURIError)
     end
     it 'can access a link directly on the entity' do
@@ -161,7 +161,7 @@ describe SirenClient::Entity do
     it 'can get the last element' do
       expect(entity[-1]).to be_a SirenClient::Entity
     end
-    it 'causes embedded entities to be traversed' do
+    it 'causes entity sub-links to be traversed' do
       expect(entity[0]).to be_a SirenClient::Entity
     end
   end

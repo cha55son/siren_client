@@ -36,7 +36,7 @@ module SirenClient
           SirenClient.logger.debug "  #{k}: #{v}"
         end
         SirenClient.logger.debug '  ' + options[:body].to_query unless options[:body].empty?
-        Entity.new(HTTParty.send(@method.to_sym, @href, options).parsed_response)
+        Entity.new(HTTParty.send(@method.to_sym, @href, options).parsed_response, @config)
       rescue URI::InvalidURIError => e
         raise InvalidURIError, e.message
       rescue JSON::ParserError => e
