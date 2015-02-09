@@ -1,12 +1,13 @@
 module SirenClient
   class Link
-    attr_reader :payload, :rels, :href, :title, :type
+    attr_reader :payload, :rels, :href, :title, :type, :config
     
-    def initialize(data)
+    def initialize(data, config={})
       if data.class != Hash
         raise ArgumentError, "You must pass in a Hash to SirenClient::Link.new"
       end
       @payload = data
+      @config = config
 
       @rels  = @payload['rel']   || []
       @href  = @payload['href']  || ''
@@ -15,7 +16,7 @@ module SirenClient
     end
 
     def go
-      Entity.new(self.href)
+      Entity.new(self.href, @config)
     end
   end
 end

@@ -2,8 +2,11 @@ require 'helper/live_spec_helper'
 
 URL = 'http://localhost:9292'
 describe HTTParty do
+  it 'will be blocked by basic auth' do
+    expect(HTTParty.get(URL).code).to eq(401)
+  end
   it 'can access the server' do
-    expect{ HTTParty.get(URL) }.to_not raise_error
+    expect(HTTParty.get(URL, basic_auth: { username: 'admin', password: '1234' }).code).to eq(200)
   end
 end
 
@@ -12,6 +15,7 @@ describe SirenClient do
     let (:headers_ent) { 
       SirenClient.get({
         url: URL,
+        basic_auth: { username: 'admin', password: '1234' },
         headers: { "Accept" => "application/json" }
       })
     }
@@ -28,26 +32,16 @@ describe SirenClient do
         "Accept" => "application/json"
       })
     end
-    it 'can set basic auth' do
-      expect {
-        a_client = SirenClient.get({
-          url: URL,
-          basic_auth: { username: 'billy', password: '1234' }
-        })
-        expect(a_client.config).to be_a Hash
-        expect(a_client.config[:basic_auth]).to eq({ 
-          username: "billy",
-          password: "1234"
-        })
-      }.to_not raise_error
-    end
   end
 
   let (:client) { 
+
     SirenClient.get(
       url: URL, 
       timeout: 2,
-      headers: { "Accept" => "application/json" }
+      basic_auth: { username: 'admin', password: '1234' },
+      headers: { "Accept" => "application/json" },
+      debug_output: $stdout
     ) 
   }
   context 'when accessing the root entity' do
@@ -66,8 +60,9 @@ describe SirenClient do
       expect(client.links['concepts']).to be_a SirenClient::Link
     end
     it 'to follow the link' do
+      byebug
       expect(client.concepts).to be_a SirenClient::Entity
-      expect(concepts.links['self'].href).to eq(URL + '/concepts')
+      expect(client.concepts.links['self'].href).to eq(URL + '/concepts')
     end
   end
   context 'when accessing an action with GET' do
@@ -99,7 +94,7 @@ describe SirenClient do
     end
   end
 
-  let (:concepts) { SirenClient.get(URL).concepts }
+  let (:concepts) { SirenClient.get({ url: URL, basic_auth: { username: 'admin', password: '1234' }}).concepts }
   context 'when accessing an entity' do
     it 'to return an entity' do
       expect(concepts).to be_a SirenClient::Entity

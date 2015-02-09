@@ -13,9 +13,8 @@ server_thread = Thread.new do
 end
 sleep(1) # wait a sec for the server to be boot
 
- RSpec.configure do |config|
-   config.after(:suite) { 
-     # server_thread.shutdown rescue nil
-     server_thread.kill
-   }
+RSpec.configure do |config|
+  config.after(:suite) { 
+    server_thread.kill
+  }
 end
