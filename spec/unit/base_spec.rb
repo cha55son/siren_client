@@ -33,18 +33,19 @@ describe SirenClient do
     end
     it 'accepts an instance that respects the logger interface' do
       SirenClient.logger = Logger.new(STDOUT)
+      SirenClient.logger.level = Logger::WARN
       expect(SirenClient.logger).to be_a Logger
     end
   end
   describe '.logger(after)' do
     it 'responds to .info(str)' do
-      expect(SirenClient.logger.info("testing info")).to eq(true)
+      expect(SirenClient.logger.respond_to?(:info)).to eq(true)
     end
     it 'responds to .warn(str)' do
-      expect(SirenClient.logger.warn("testing warn")).to eq(true)
+      expect(SirenClient.logger.respond_to?(:warn)).to eq(true)
     end
     it 'responds to .error(str)' do
-      expect(SirenClient.logger.error("testing error")).to eq(true)
+      expect(SirenClient.logger.respond_to?(:error)).to eq(true)
     end
   end
   # Remainder will be tested in live spec

@@ -40,8 +40,7 @@ describe SirenClient do
       url: URL, 
       timeout: 2,
       basic_auth: { username: 'admin', password: '1234' },
-      headers: { "Accept" => "application/json" },
-      debug_output: $stdout
+      headers: { "Accept" => "application/json" }
     ) 
   }
   context 'when accessing the root entity' do
@@ -60,7 +59,6 @@ describe SirenClient do
       expect(client.links['concepts']).to be_a SirenClient::Link
     end
     it 'to follow the link' do
-      byebug
       expect(client.concepts).to be_a SirenClient::Entity
       expect(client.concepts.links['self'].href).to eq(URL + '/concepts')
     end

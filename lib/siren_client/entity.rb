@@ -26,6 +26,8 @@ module SirenClient
       parse_data
     end
 
+    # Execute an entity sub-link if called directly
+    # otherwise just return the entity.
     def [](i)
       @entities[i].href.empty? ? @entities[i] : @entities[i].go rescue nil
     end
@@ -37,7 +39,7 @@ module SirenClient
     ### Entity sub-links only
     def go
       return if self.href.empty?
-      self.class.new(self.href)
+      self.class.new(self.href, @config)
     end
     
     def method_missing(method, *args)
@@ -70,12 +72,12 @@ module SirenClient
       @properties = @payload['properties'] || { }
       @entities   = @payload['entities']   || []
       @entities.map! do |data|
-        self.class.new(data)
+        self.class.new(data, @config)
       end
       @rels  = @payload['rel']   || []
       @links = @payload['links'] || []
       @links.map! do |data|
-        Link.new(data)
+        Link.new(data, @config)
       end
       # Convert links into a hash
       @links = @links.inject({}) do |hash, link|

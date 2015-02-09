@@ -24,7 +24,9 @@ describe SirenClient::Entity do
   end
 
   let (:entity) { 
-    SirenClient::Entity.new(siren_body, { headers: { "Accept" => "application/json" } })
+    SirenClient::Entity.new(siren_body, { 
+      headers: { "Accept" => "application/json" } 
+    })
   }
   describe '.config' do
     it 'is a hash' do
@@ -119,7 +121,7 @@ describe SirenClient::Entity do
       expect(entity.go).to eq(nil)
     end
     it 'initiate a request if it IS an entity sub-link' do
-      expect { graph.entities[0].go }.to raise_error(SirenClient::InvalidURIError)
+      expect { graph.entities[0].go }.to raise_error
     end
   end
   describe '.invalidkey' do
@@ -130,10 +132,10 @@ describe SirenClient::Entity do
   describe '.validkey' do
     let (:graph) { entity[0] } 
     it 'can access an entity sub-link within the entity' do
-      expect { graph.messages }.to raise_error(SirenClient::InvalidURIError)
+      expect { graph.messages }.to raise_error
     end
     it 'can access a link directly on the entity' do
-      expect { entity.next }.to raise_error(SirenClient::InvalidURIError)
+      expect { entity.next }.to raise_error
     end
     it 'can access an action directly on the entity' do
       expect(entity.filter_concepts).to be_a SirenClient::Action

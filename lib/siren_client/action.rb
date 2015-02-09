@@ -8,7 +8,7 @@ module SirenClient
       end
       @payload = data
 
-      @config  = config
+      @config = { format: :json }.merge config 
       @name    = @payload['name']   || ''
       @classes = @payload['class']  || []
       @method  = (@payload['method'] || 'GET').downcase

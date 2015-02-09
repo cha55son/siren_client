@@ -3,7 +3,7 @@ module SirenClient
   # or default to a standard logger. This will allow different
   # setups i.e. java logging to log wherever/however they wish.
   @@logger = Logger.new(STDOUT)
-  @@logger.level = Logger::INFO
+  @@logger.level = Logger::WARN
   @@logger.progname = 'SirenClient.' + SirenClient::VERSION
   def self.logger; @@logger; end
   def self.logger=(log)

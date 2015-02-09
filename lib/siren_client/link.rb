@@ -7,7 +7,7 @@ module SirenClient
         raise ArgumentError, "You must pass in a Hash to SirenClient::Link.new"
       end
       @payload = data
-      @config = config
+      @config = { format: :json }.merge config 
 
       @rels  = @payload['rel']   || []
       @href  = @payload['href']  || ''
