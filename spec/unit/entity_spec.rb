@@ -167,13 +167,89 @@ describe SirenClient::Entity do
       expect(entity[0]).to be_a SirenClient::Entity
     end
   end
-  describe '.each' do
-    it 'can iterate over all the entities' do
-      expect {
-        entity.each do |ent|
+  # Entities enumerable support
+  describe "enumerable support" do
+    let (:graph) { entity[0] } 
+    describe '.each' do
+      it 'can iterate over all the entities' do
+        expect {
+          graph.each do |ent|
+            expect(ent).to be_a SirenClient::Entity
+          end
+        }.to_not raise_error
+      end
+    end
+    # Useful enumerable methods
+    describe '.all?' do 
+      it 'returns a boolean' do
+        graph.all? { |ent|
+          ent == SirenClient::Entity
+        }.to eq(true)
+      end
+    end
+    describe '.find' do
+      it 'should return an entity with rel: /rels/messages' do
+        let (:ent) {
+          graph.find do |ent|
+            ent.rels.include?('/rels/messages')
+          end
+        }
+        expect(ent).to be_a SirenClient::Entity
+        expect(ent.rels.include?('/rels/messages')).to eq(true)
+      end
+    end
+    describe '.find_all' do
+      it 'should return an Array of entities with a class of "collection"' do
+        let (:ents) {
+          graph.find_all do |ent|
+            ent.classes.include?('collection')
+          end
+        }
+        expect(ents).to be_a Array
+        ents.each do |ent|
+          expect(ent.classes.include?('collection')).to eq(true)
+        end
+      end
+    end
+    describe '.first' do
+      it 'should return the first SirenClient::Entity"' do
+        expect(graph.first).to be_a SirenClient::Entity
+        expect(graph.first).to eq(graph[0])
+      end
+    end
+    describe '.grep' do
+      it "should return an Array of entities with an href that matches /test1/" do
+        let (:ents) {
+          graph.grep(/test1/) { |ent|
+            ent.href
+          }
+        }
+        expect(ents).to be_a Array
+        expect(ents[0]).to eq(graph[0])
+      end
+    end
+    describe '.map' do
+      it 'returns an array of entities with the class "concepts"' do
+        let (:ents) { 
+          graph.collect { |ent|
+            ent.classes.include?('concepts')
+          }
+        }
+        expect(ents).to be_a Array
+        expect(ents.length).to eq(1)
+        ents.each do |ent|
           expect(ent).to be_a SirenClient::Entity
         end
-      }.to_not raise_error
+      end
+    end
+    describe '.reject' do
+
+    end
+    describe '.select' do
+
+    end
+    describe '.sort' do
+
     end
   end
 end
