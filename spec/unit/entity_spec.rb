@@ -181,75 +181,113 @@ describe SirenClient::Entity do
     end
     # Useful enumerable methods
     describe '.all?' do 
-      it 'returns a boolean' do
-        graph.all? { |ent|
-          ent == SirenClient::Entity
-        }.to eq(true)
+      it 'matches .entities.all?' do
+        expect(
+          graph.all? do |ent|
+            ent == SirenClient::Entity
+          end
+        ).to eq(
+          graph.entities.all? do |ent|
+              ent == SirenClient::Entity
+          end
+        )
       end
     end
     describe '.find' do
-      it 'should return an entity with rel: /rels/messages' do
-        let (:ent) {
+      it 'matches .entities.find' do
+        expect(
           graph.find do |ent|
             ent.rels.include?('/rels/messages')
           end
-        }
-        expect(ent).to be_a SirenClient::Entity
-        expect(ent.rels.include?('/rels/messages')).to eq(true)
+        ).to eq(
+          graph.entities.find do |ent|
+            ent.rels.include?('/rels/messages')
+          end
+        )
       end
     end
     describe '.find_all' do
-      it 'should return an Array of entities with a class of "collection"' do
-        let (:ents) {
+      it 'matches .entities.find_all' do
+        expect(
           graph.find_all do |ent|
             ent.classes.include?('collection')
           end
-        }
-        expect(ents).to be_a Array
-        ents.each do |ent|
-          expect(ent.classes.include?('collection')).to eq(true)
-        end
+        ).to eq(
+          graph.entities.find_all do |ent|
+            ent.classes.include?('collection')
+          end
+        )
       end
     end
     describe '.first' do
-      it 'should return the first SirenClient::Entity"' do
-        expect(graph.first).to be_a SirenClient::Entity
-        expect(graph.first).to eq(graph[0])
+      it 'matches .entities.first' do
+        expect(graph.first).to eq(graph.entities.first)
       end
     end
     describe '.grep' do
-      it "should return an Array of entities with an href that matches /test1/" do
-        let (:ents) {
-          graph.grep(/test1/) { |ent|
+      it "matches .entities.grep" do
+        expect(
+          graph.grep(/test1/) do |ent|
             ent.href
-          }
-        }
-        expect(ents).to be_a Array
-        expect(ents[0]).to eq(graph[0])
+          end
+        ).to eq(
+          graph.entities.grep(/test1/) do |ent|
+            ent.href
+          end
+        )
       end
     end
     describe '.map' do
-      it 'returns an array of entities with the class "concepts"' do
-        let (:ents) { 
-          graph.collect { |ent|
+      it 'matches .entities.map' do
+        expect(
+          graph.map do |ent|
             ent.classes.include?('concepts')
-          }
-        }
-        expect(ents).to be_a Array
-        expect(ents.length).to eq(1)
-        ents.each do |ent|
-          expect(ent).to be_a SirenClient::Entity
-        end
+          end
+        ).to eq(
+          graph.entities.map do |ent|
+            ent.classes.include?('concepts')
+          end
+        )
       end
     end
     describe '.reject' do
-
+      it 'matches .entities.reject' do
+        expect(
+          graph.reject do |ent|
+            ent.classes.include?('messages')
+          end
+        ).to eq(
+          graph.entities.reject do |ent|
+            ent.classes.include?('messages')
+          end
+        )
+      end
     end
     describe '.select' do
-
+      it 'matches .entities.select' do
+        expect(
+          graph.select do |ent|
+            ent.rels.include?('/rels/concepts')
+          end
+        ).to eq(
+          graph.entities.select do |ent|
+            ent.rels.include?('/rels/concepts')
+          end
+        )
+      end
     end
     describe '.sort' do
-
+      it 'matches .entities.sort' do
+        expect(
+          graph.sort do |ent_a, ent_b|
+            ent_b.classes[0] <=> ent_a.classes[0]
+          end
+        ).to eq(
+          graph.entities.sort do |ent_a, ent_b|
+            ent_b.classes[0] <=> ent_a.classes[0]
+          end
+        )
+      end
     end
   end
 end
