@@ -1,5 +1,6 @@
 module SirenClient
   class Entity
+    include Enumerable
     attr_reader :payload, :classes, :properties, :entities, :rels, 
                 :links, :actions, :title, :type, :config, :href
 
