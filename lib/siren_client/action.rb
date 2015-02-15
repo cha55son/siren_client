@@ -1,6 +1,7 @@
 module SirenClient
   class Action
-    attr_reader :payload, :name, :classes, :method, :href, :title, :type, :fields, :config
+    attr_accessor :href
+    attr_reader :payload, :name, :classes, :method, :title, :type, :fields, :config
 
     def initialize(data, config={})
       if data.class != Hash

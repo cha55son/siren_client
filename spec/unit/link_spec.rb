@@ -33,6 +33,10 @@ describe SirenClient::Link do
     it 'is a string' do
       expect(link.href).to be_a String
     end
+    it 'can change .href as needed' do
+        link.href = link.href + '?query=test'
+        expect(/query=test/).to match(link.href)
+    end
   end
   describe '.title' do
     it 'is a string' do

@@ -112,6 +112,10 @@ describe SirenClient::Entity do
     it 'should be empty' do
       expect(entity.href).to eq('')
     end
+    it 'can change .href as needed' do
+        entity.href = 'http://example.com?query=test'
+        expect(/query=test/).to match(entity.href)
+    end
   end
   # Similar to SirenClient::Link.go this function will create a 
   # new entity from the .href method. For entity sub-links only.

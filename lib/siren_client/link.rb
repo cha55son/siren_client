@@ -1,6 +1,7 @@
 module SirenClient
   class Link
-    attr_reader :payload, :rels, :href, :title, :type, :config
+    attr_accessor :href
+    attr_reader :payload, :rels, :title, :type, :config
     
     def initialize(data, config={})
       if data.class != Hash

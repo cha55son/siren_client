@@ -52,6 +52,10 @@ describe SirenClient::Action do
     it 'is a string' do
       expect(action.href).to be_a String
     end
+    it 'can change .href as needed' do
+        action.href = action.href + '?query=test'
+        expect(/query=test/).to match(action.href)
+    end
   end
   describe '.title' do
     it 'is a string' do

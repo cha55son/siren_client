@@ -1,8 +1,9 @@
 module SirenClient
   class Entity
     include Enumerable
+    attr_accessor :href
     attr_reader :payload, :classes, :properties, :entities, :rels, 
-                :links, :actions, :title, :type, :config, :href
+                :links, :actions, :title, :type, :config
 
 
     def initialize(data, config={})
