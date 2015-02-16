@@ -186,6 +186,20 @@ describe SirenClient::Entity do
       expect(graph.search('messages')[0].classes.include?('messages')).to eq(true)
     end
   end
+  describe '.string(/test1/)' do
+    it 'returns an Array' do
+      expect(graph.search(/test1/)).to be_a Array
+    end
+    it 'returns an Array of the right size' do
+      expect(graph.search(/test1/).length).to eq(1)
+    end
+    it 'the second element is a SirenClient::Entity' do
+      expect(graph.search(/test1/)[0]).to be_a SirenClient::Entity
+    end
+    it 'the second element\'s classes include "concepts"' do
+      expect(graph.search(/test1/)[0].classes.include?('messages')).to eq(true)
+    end
+  end
   describe '.string(/test[0-9]/)' do
     it 'returns an Array' do
       expect(graph.search(/test[0-9]/)).to be_a Array
