@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'byebug'
+require 'byebug' if RUBY_VERSION > '2'
 require 'siren_cli'
 
 SirenCLI::Shell.new
