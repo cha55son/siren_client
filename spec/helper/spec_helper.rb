@@ -1,4 +1,4 @@
-require 'byebug'
+require 'byebug' if RUBY_VERSION > '2'
 require 'siren_client'
 
 RSpec.configure do |config|

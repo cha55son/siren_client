@@ -38,6 +38,23 @@ module SirenClient
       @entities.each(&block) rescue nil
     end
 
+    def search(criteria)
+      return false unless criteria
+      if criteria.is_a? String
+        return entities.select do |ent|
+          true if ent.classes.include?(criteria) || 
+                  ent.rels.include?(criteria) || 
+                  ent.href == criteria
+        end
+      elsif criteria.is_a? Regexp
+        return entities.select do |ent|
+          true if ent.classes.any? { |klass| criteria.match(klass) } ||
+                  ent.rels.any? { |rel| criteria.match(rel) } ||
+                  criteria.match(ent.href)
+        end
+      end
+    end
+
     ### Entity sub-links only
     def go
       return if self.href.empty?
