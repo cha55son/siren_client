@@ -46,6 +46,18 @@ root.entities[x] # This is an array
 root.each do |entity|
   # do something
 end
+# With full enumerable support entities work similarly to arrays
+root.map { |entity| ... }
+root.select { |entity| ... }
+root.find { |entity| ... }
+# You can view all the enumerable methods here: http://ruby-doc.org/core-2.0.0/Enumerable.html
+```
+
+Entities also provide the method `.search` for searching across sub-entities' classes, rels, and hrefs (sub-links only).
+
+```ruby
+root.search("messages") # => Array<SirenClient::Entity>
+root.search(/(messages|concepts)/) # => Array<SirenClient::Entity>
 ```
 
 #### Entity sub-links
