@@ -14,4 +14,4 @@ class TestServer < Sinatra::Base
 end
 
 # Require all the endpoint files that build the api.
-Dir[__dir__ + "/endpoints/*.rb"].each {|file| require file }
+Dir[File.expand_path(File.dirname(__FILE__)) + "/endpoints/*.rb"].each {|file| require file }
