@@ -32,6 +32,12 @@ def siren_body
             'class' => ['concepts', 'collection'],
             'rel' => ['/rels/concepts'],
             'href' => '/graphs/test2/concepts'
+          },
+          {
+            # Just to test the underscore transformation
+            'class' => ['user-preferences', 'collection'],
+            'rel' => ['/rels/user-preferences'],
+            'href' => '/graphs/user/preferences'
           }
         ],
         'links' => [
@@ -71,7 +77,7 @@ def siren_body
         ]
       },
       {
-        'name' => 'filter_messages',
+        'name' => 'filter-messages',
         'method' => 'GET',
         'href' => '/graphs/test1/messages',
         'title' => 'Get an optionally filtered list of Messages',
@@ -102,6 +108,10 @@ def siren_body
       {
         'rel' => ['self'],
         'href' => '/graphs?limit=1&page=1&order_by=name'
+      },
+      {
+        'rel' => ['prev-page'],
+        'href' => '/graphs?limit=1&page=0&order_by=name'
       },
       {
         'rel' => ['next'],

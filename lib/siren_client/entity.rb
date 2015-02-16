@@ -70,15 +70,16 @@ module SirenClient
       end
       # Does it match an entity sub-link's class? 
       @entities.each do |ent|
-        return ent.go if ent.href && ent.classes.include?(method_str)
+        return ent.go if ent.href && 
+                         (ent.classes.map { |c| c.underscore }).include?(method_str.underscore)
       end
       # Does it match a link, if so traverse it and return the entity.
       @links.each do |key, link|
-        return link.go if method_str == key
+        return link.go if method_str == key.underscore
       end
       # Does it match an action, if so return the action.
       @actions.each do |key, action|
-        return action if method_str == key
+        return action if method_str == key.underscore
       end
       raise NoMethodError, 'The method does not match a property, action, or link on SirenClient::Entity.'
     end
@@ -109,7 +110,7 @@ module SirenClient
           hash_rel = rel and break
         end
         # Ensure the rel name is a valid hash key
-        hash[hash_rel.underscore] = link
+        hash[hash_rel] = link
         hash
       end
       @actions = @payload['actions'] || []
@@ -119,7 +120,7 @@ module SirenClient
       # Convert actions into a hash
       @actions = @actions.inject({}) do |hash, action|
         next unless action.name
-        hash[action.name.underscore] = action
+        hash[action.name] = action
         hash
       end
       @title = @payload['title'] || ''

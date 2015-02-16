@@ -214,6 +214,19 @@ describe SirenClient::Entity do
       expect(graph.search(/test[0-9]/)[1].classes.include?('concepts')).to eq(true)
     end
   end
+  describe 'underscore support' do
+    it 'can access entity sub-links' do
+      # Since this will trigger the sub-link. We expect an InvalidURIError
+      expect { graph.user_preferences }.to raise_error(SirenClient::InvalidURIError)
+    end
+    it 'can access actions' do
+      expect(entity.filter_messages).to be_a SirenClient::Action
+    end
+    it 'can access links' do
+      # Since this will trigger the link. We expect an InvalidURIError
+      expect { entity.prev_page }.to raise_error(SirenClient::InvalidURIError)
+    end
+  end
   # Entities enumerable support
   describe "enumerable support" do
     describe '.each' do
