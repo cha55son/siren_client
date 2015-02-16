@@ -1,4 +1,4 @@
-# SirenClient
+# SirenClient [![Build Status](https://travis-ci.org/cha55son/siren_client.svg)](https://travis-ci.org/cha55son/siren_client)
 
 A simple client for traversing Siren APIs. Not sure what Siren is? View the spec here: https://github.com/kevinswiber/siren.
 
