@@ -15,9 +15,6 @@ describe SirenClient::Entity do
     it 'raise an error if the url does not return json' do
       expect { SirenClient::Entity.new('http://www.google.com') }.to raise_error(SirenClient::InvalidResponseError)
     end
-    # it 'can be instanciated with a proper url' do 
-    #   expect(SirenClient::Entity.new(valid_url)).to be_a SirenClient::Entity
-    # end
     it 'can be instanciated with a hash of data' do 
       expect(SirenClient::Entity.new(siren_body)).to be_a SirenClient::Entity
     end
@@ -281,19 +278,6 @@ describe SirenClient::Entity do
     describe '.first' do
       it 'matches .entities.first' do
         expect(graph.first).to eq(graph.entities.first)
-      end
-    end
-    describe '.grep' do
-      it "matches .entities.grep" do
-        expect(
-          graph.grep(/test1/) do |ent|
-            ent.href
-          end
-        ).to eq(
-          graph.entities.grep(/test1/) do |ent|
-            ent.href
-          end
-        )
       end
     end
     describe '.map' do
