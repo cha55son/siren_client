@@ -1,5 +1,7 @@
 require 'byebug' if RUBY_VERSION > '2'
 require 'siren_client'
+require 'coveralls'
+Coveralls.wear!
 
 RSpec.configure do |config|
   # Ensure we only use `expect` and not `should`.
