@@ -15,7 +15,7 @@ root = SirenClient.get('http://siren-api.example.com')
 # Advanced usage
 root = SirenClient.get({
   url: 'http://siren-api.example.com',
-  headers: { "Accept": "application/json", ... },
+  headers: { "Accept" => "application/json", ... },
   basic_auth: { username: 'person', password: '1234' },
   timeout: 5,
   ... # Refer to https://github.com/jnunemaker/httparty/blob/master/lib/httparty.rb#L45
