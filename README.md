@@ -13,7 +13,8 @@ require 'siren_client'
 root = SirenClient.get('http://siren-api.example.com')
 
 # Advanced usage
-root = SirenClient.get('http://siren-api.example.com', {
+root = SirenClient.get({
+  url: 'http://siren-api.example.com',
   headers: { "Accept": "application/json", ... },
   basic_auth: { username: 'person', password: '1234' },
   timeout: 5,
