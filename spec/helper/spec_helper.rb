@@ -1,4 +1,4 @@
-require 'byebug' if RUBY_VERSION > '2'
+require 'byebug' if RUBY_VERSION > '2' && RUBY_PLATFORM != "java"
 require 'siren_client'
 require 'coveralls'
 Coveralls.wear!
