@@ -1,7 +1,7 @@
 require 'helper/spec_helper'
 
 describe SirenClient::Entity do
-  
+
   describe '.new(data)' do
     it 'raise an error if no param is provided' do
       expect { SirenClient::Entity.new }.to raise_error(ArgumentError)
@@ -15,14 +15,14 @@ describe SirenClient::Entity do
     it 'raise an error if the url does not return json' do
       expect { SirenClient::Entity.new('http://www.google.com') }.to raise_error(SirenClient::InvalidResponseError)
     end
-    it 'can be instanciated with a hash of data' do 
+    it 'can be instanciated with a hash of data' do
       expect(SirenClient::Entity.new(siren_body)).to be_a SirenClient::Entity
     end
   end
 
-  let (:entity) { 
-    SirenClient::Entity.new(siren_body, { 
-      headers: { "Accept" => "application/json" } 
+  let (:entity) {
+    SirenClient::Entity.new(siren_body, {
+      headers: { "Accept" => "application/json" }
     })
   }
   describe '.config' do
@@ -114,10 +114,10 @@ describe SirenClient::Entity do
         expect(/query=test/).to match(entity.href)
     end
   end
-  # Similar to SirenClient::Link.go this function will create a 
+  # Similar to SirenClient::Link.go this function will create a
   # new entity from the .href method. For entity sub-links only.
   describe '.go' do
-    let (:graph) { entity[0] } 
+    let (:graph) { entity[0] }
     it 'return nil if it\'s NOT an entity sub-link' do
       expect(entity.go).to eq(nil)
     end
@@ -129,9 +129,16 @@ describe SirenClient::Entity do
     it 'will throw a NoMethodError' do
       expect { entity.thisdoesntexist }.to raise_error(NoMethodError)
     end
+    it 'prints .invalidkey used to NoMethodError message' do
+      begin
+        entity.thisdoesntexist
+      rescue NoMethodError => e
+        expect( e.to_s ).to match(/thisdoesntexist/)
+      end
+    end
   end
   describe '.validkey' do
-    let (:graph) { entity[0] } 
+    let (:graph) { entity[0] }
     it 'can access an entity sub-link within the entity' do
       expect { graph.messages }.to raise_error
     end
@@ -168,7 +175,7 @@ describe SirenClient::Entity do
       expect(entity[0]).to be_a SirenClient::Entity
     end
   end
-  let (:graph) { entity[0] } 
+  let (:graph) { entity[0] }
   describe '.search("messages")' do
     it 'returns an Array' do
       expect(graph.search('messages')).to be_a Array
@@ -236,7 +243,7 @@ describe SirenClient::Entity do
       end
     end
     # Useful enumerable methods
-    describe '.all?' do 
+    describe '.all?' do
       it 'matches .entities.all?' do
         expect(
           graph.all? do |ent|
