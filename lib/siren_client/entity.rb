@@ -81,7 +81,7 @@ module SirenClient
       @actions.each do |key, action|
         return action if method_str == key.underscore
       end
-      raise NoMethodError, "The method #{method_str} does not match a property, action, or link on SirenClient::Entity."
+      raise NoMethodError, "The method \"#{method_str}\" does not match a property, action, or link on SirenClient::Entity."
     end
 
     private
