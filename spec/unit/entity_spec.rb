@@ -122,7 +122,7 @@ describe SirenClient::Entity do
       expect(entity.go).to eq(nil)
     end
     it 'initiate a request if it IS an entity sub-link' do
-      expect { graph.entities[0].go }.to raise_error
+      expect { graph.entities[0].go }.to raise_error Errno::ECONNREFUSED
     end
   end
   describe '.invalidkey' do
@@ -133,10 +133,10 @@ describe SirenClient::Entity do
   describe '.validkey' do
     let (:graph) { entity[0] } 
     it 'can access an entity sub-link within the entity' do
-      expect { graph.messages }.to raise_error
+      expect { graph.messages }.to raise_error Errno::ECONNREFUSED
     end
     it 'can access a link directly on the entity' do
-      expect { entity.next }.to raise_error
+      expect { entity.next }.to raise_error Errno::ECONNREFUSED
     end
     it 'can access an action directly on the entity' do
       expect(entity.filter_concepts).to be_a SirenClient::Action
@@ -214,14 +214,14 @@ describe SirenClient::Entity do
   describe 'underscore support' do
     it 'can access entity sub-links' do
       # Since this will trigger the sub-link. We expect an error
-      expect { graph.user_preferences }.to raise_error
+      expect { graph.user_preferences }.to raise_error Errno::ECONNREFUSED
     end
     it 'can access actions' do
       expect(entity.filter_messages).to be_a SirenClient::Action
     end
     it 'can access links' do
       # Since this will trigger the link. We expect an error
-      expect { entity.prev_page }.to raise_error
+      expect { entity.prev_page }.to raise_error Errno::ECONNREFUSED
     end
   end
   # Entities enumerable support
