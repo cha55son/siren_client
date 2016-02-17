@@ -29,7 +29,7 @@ describe SirenClient do
   end
   describe '.logger=' do
     it 'raise an error if it does not respect the logger interface' do
-      expect { SirenClient.logger = "error" }.to raise_error
+      expect { SirenClient.logger = "error" }.to raise_error SirenClient::InvalidLogger
     end
     it 'accepts an instance that respects the logger interface' do
       SirenClient.logger = Logger.new(STDOUT)

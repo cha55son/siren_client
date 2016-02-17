@@ -2,12 +2,12 @@ module SirenClient
   class Entity
     include Enumerable
     attr_accessor :href
-    attr_reader :payload, :classes, :properties, :entities, :rels, 
+    attr_reader :payload, :classes, :properties, :entities, :rels,
                 :links, :actions, :title, :type, :config
 
 
     def initialize(data, config={})
-      @config = { format: :json }.merge config 
+      @config = { format: :json }.merge config
       if data.class == String
         unless data.class == String && data.length > 0
             raise InvalidURIError, 'An invalid url was passed to SirenClient::Entity.new.'
@@ -42,8 +42,8 @@ module SirenClient
       return false unless criteria
       if criteria.is_a? String
         return entities.select do |ent|
-          true if ent.classes.include?(criteria) || 
-                  ent.rels.include?(criteria) || 
+          true if ent.classes.include?(criteria) ||
+                  ent.rels.include?(criteria) ||
                   ent.href == criteria
         end
       elsif criteria.is_a? Regexp
@@ -60,7 +60,7 @@ module SirenClient
       return if self.href.empty?
       self.class.new(self.href, @config)
     end
-    
+
     def method_missing(method, *args)
       method_str = method.to_s
       return @entities.length if method_str == 'length'
@@ -68,9 +68,9 @@ module SirenClient
       @properties.each do |key, prop|
         return prop if method_str == key
       end
-      # Does it match an entity sub-link's class? 
+      # Does it match an entity sub-link's class?
       @entities.each do |ent|
-        return ent.go if ent.href && 
+        return ent.go if ent.href &&
                          (ent.classes.map { |c| c.underscore }).include?(method_str.underscore)
       end
       # Does it match a link, if so traverse it and return the entity.
@@ -81,7 +81,7 @@ module SirenClient
       @actions.each do |key, action|
         return action if method_str == key.underscore
       end
-      raise NoMethodError, 'The method does not match a property, action, or link on SirenClient::Entity.'
+      raise NoMethodError, "The method \"#{method_str}\" does not match a property, action, or link on SirenClient::Entity."
     end
 
     private

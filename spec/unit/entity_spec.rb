@@ -1,7 +1,7 @@
 require 'helper/spec_helper'
 
 describe SirenClient::Entity do
-  
+
   describe '.new(data)' do
     it 'raise an error if no param is provided' do
       expect { SirenClient::Entity.new }.to raise_error(ArgumentError)
@@ -15,14 +15,14 @@ describe SirenClient::Entity do
     it 'raise an error if the url does not return json' do
       expect { SirenClient::Entity.new('http://www.google.com') }.to raise_error(SirenClient::InvalidResponseError)
     end
-    it 'can be instanciated with a hash of data' do 
+    it 'can be instanciated with a hash of data' do
       expect(SirenClient::Entity.new(siren_body)).to be_a SirenClient::Entity
     end
   end
 
-  let (:entity) { 
-    SirenClient::Entity.new(siren_body, { 
-      headers: { "Accept" => "application/json" } 
+  let (:entity) {
+    SirenClient::Entity.new(siren_body, {
+      headers: { "Accept" => "application/json" }
     })
   }
   describe '.config' do
@@ -114,29 +114,36 @@ describe SirenClient::Entity do
         expect(/query=test/).to match(entity.href)
     end
   end
-  # Similar to SirenClient::Link.go this function will create a 
+  # Similar to SirenClient::Link.go this function will create a
   # new entity from the .href method. For entity sub-links only.
   describe '.go' do
-    let (:graph) { entity[0] } 
+    let (:graph) { entity[0] }
     it 'return nil if it\'s NOT an entity sub-link' do
       expect(entity.go).to eq(nil)
     end
     it 'initiate a request if it IS an entity sub-link' do
-      expect { graph.entities[0].go }.to raise_error
+      expect { graph.entities[0].go }.to raise_error Errno::ECONNREFUSED
     end
   end
   describe '.invalidkey' do
     it 'will throw a NoMethodError' do
       expect { entity.thisdoesntexist }.to raise_error(NoMethodError)
     end
+    it 'prints .invalidkey used to NoMethodError message' do
+      begin
+        entity.thisdoesntexist
+      rescue NoMethodError => e
+        expect( e.to_s ).to match(/thisdoesntexist/)
+      end
+    end
   end
   describe '.validkey' do
-    let (:graph) { entity[0] } 
+    let (:graph) { entity[0] }
     it 'can access an entity sub-link within the entity' do
-      expect { graph.messages }.to raise_error
+      expect { graph.messages }.to raise_error Errno::ECONNREFUSED
     end
     it 'can access a link directly on the entity' do
-      expect { entity.next }.to raise_error
+      expect { entity.next }.to raise_error Errno::ECONNREFUSED
     end
     it 'can access an action directly on the entity' do
       expect(entity.filter_concepts).to be_a SirenClient::Action
@@ -168,7 +175,7 @@ describe SirenClient::Entity do
       expect(entity[0]).to be_a SirenClient::Entity
     end
   end
-  let (:graph) { entity[0] } 
+  let (:graph) { entity[0] }
   describe '.search("messages")' do
     it 'returns an Array' do
       expect(graph.search('messages')).to be_a Array
@@ -214,14 +221,14 @@ describe SirenClient::Entity do
   describe 'underscore support' do
     it 'can access entity sub-links' do
       # Since this will trigger the sub-link. We expect an error
-      expect { graph.user_preferences }.to raise_error
+      expect { graph.user_preferences }.to raise_error Errno::ECONNREFUSED
     end
     it 'can access actions' do
       expect(entity.filter_messages).to be_a SirenClient::Action
     end
     it 'can access links' do
       # Since this will trigger the link. We expect an error
-      expect { entity.prev_page }.to raise_error
+      expect { entity.prev_page }.to raise_error Errno::ECONNREFUSED
     end
   end
   # Entities enumerable support
@@ -236,7 +243,7 @@ describe SirenClient::Entity do
       end
     end
     # Useful enumerable methods
-    describe '.all?' do 
+    describe '.all?' do
       it 'matches .entities.all?' do
         expect(
           graph.all? do |ent|

@@ -83,7 +83,7 @@ describe SirenClient::Action do
   describe '.where(params)' do
     it 'executes the action without any parameters' do
       # I'm expecting an error here, all I want to see is that the url it being traversed.
-      expect { action.where }.to raise_error
+      expect { action.where }.to raise_error SirenClient::InvalidResponseError
     end
     # The rest will be tested in the live specs.
   end

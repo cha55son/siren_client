@@ -1,4 +1,4 @@
-require 'byebug' if RUBY_VERSION > '2'
+require 'byebug' if RUBY_VERSION > '2' && RUBY_PLATFORM != "java"
 require 'siren_client'
 require 'coveralls'
 Coveralls.wear!
@@ -28,24 +28,24 @@ def siren_body
           {
             'class' => ['messages', 'collection'],
             'rel' => ['/rels/messages'],
-            'href' => '/graphs/test1/messages'
+            'href' => 'http://localhost/graphs/test1/messages'
           },
           {
             'class' => ['concepts', 'collection'],
             'rel' => ['/rels/concepts'],
-            'href' => '/graphs/test2/concepts'
+            'href' => 'http://localhost/graphs/test2/concepts'
           },
           {
             # Just to test the underscore transformation
             'class' => ['user-preferences', 'collection'],
             'rel' => ['/rels/user-preferences'],
-            'href' => '/graphs/user/preferences'
+            'href' => 'http://localhost/graphs/user/preferences'
           }
         ],
         'links' => [
           {
             'rel' => ['self'],
-            'href' => '/graphs/test1'
+            'href' => 'http://localhost/graphs/test1'
           }
         ]
       }
@@ -54,7 +54,7 @@ def siren_body
       {
         'name' => 'filter_concepts',
         'method' => 'GET',
-        'href' => '/graphs/test1/concepts',
+        'href' => 'http://localhost/graphs/test1/concepts',
         'title' => 'Get an optionally filtered list of Concepts',
         'type' => 'application/x-www-form-urlencoded',
         'fields' => [
@@ -81,7 +81,7 @@ def siren_body
       {
         'name' => 'filter-messages',
         'method' => 'GET',
-        'href' => '/graphs/test1/messages',
+        'href' => 'http://localhost/graphs/test1/messages',
         'title' => 'Get an optionally filtered list of Messages',
         'type' => 'application/x-www-form-urlencoded',
         'fields' => [
@@ -109,15 +109,15 @@ def siren_body
     'links' => [
       {
         'rel' => ['self'],
-        'href' => '/graphs?limit=1&page=1&order_by=name'
+        'href' => 'http://localhost/graphs?limit=1&page=1&order_by=name'
       },
       {
         'rel' => ['prev-page'],
-        'href' => '/graphs?limit=1&page=0&order_by=name'
+        'href' => 'http://localhost/graphs?limit=1&page=0&order_by=name'
       },
       {
         'rel' => ['next'],
-        'href' => '/graphs?limit=1&page=2&order_by=name'
+        'href' => 'http://localhost/graphs?limit=1&page=2&order_by=name'
       }
     ]
   }
