@@ -1,16 +1,19 @@
 module SirenClient
   class Entity
     include Enumerable
+    include Modules::WithRawResponse
+
     attr_accessor :href
     attr_reader :payload, :classes, :properties, :entities, :rels,
                 :links, :actions, :title, :type, :config
 
 
     def initialize(data, config={})
+      super()
       @config = { format: :json }.merge config
       if data.class == String
         unless data.class == String && data.length > 0
-            raise InvalidURIError, 'An invalid url was passed to SirenClient::Entity.new.'
+          raise InvalidURIError, 'An invalid url was passed to SirenClient::Entity.new.'
         end
         begin
           SirenClient.logger.debug "GET #{data}"
@@ -21,9 +24,9 @@ module SirenClient
           raise InvalidResponseError, e.message
         end
       elsif data.class == Hash
-          @payload = data
+        @payload = data
       else
-          raise ArgumentError, "You must pass in either a url(String) or an entity(Hash) to SirenClient::Entity.new"
+        raise ArgumentError, "You must pass in either a url(String) or an entity(Hash) to SirenClient::Entity.new"
       end
       parse_data
     end
@@ -31,7 +34,16 @@ module SirenClient
     # Execute an entity sub-link if called directly
     # otherwise just return the entity.
     def [](i)
-      @entities[i].href.empty? ? @entities[i] : @entities[i].go rescue nil
+      if @entities[i].href.empty?
+        @entities[i]
+      else
+        if next_response_is_raw?
+          disable_raw_response
+          @entities[i].with_raw_response.go 
+        else 
+          @entities[i].go
+        end
+      end
     end
 
     def each(&block)
@@ -58,7 +70,12 @@ module SirenClient
     ### Entity sub-links only
     def go
       return if self.href.empty?
-      self.class.new(self.href, @config)
+      if next_response_is_raw?
+        disable_raw_response
+        generate_raw_response(self.href, @config)
+      else
+        self.class.new(self.href, @config)
+      end
     end
 
     def method_missing(method, *args)
@@ -70,12 +87,25 @@ module SirenClient
       end
       # Does it match an entity sub-link's class?
       @entities.each do |ent|
-        return ent.go if ent.href &&
-                         (ent.classes.map { |c| c.underscore }).include?(method_str.underscore)
+        if ent.href && (ent.classes.map { |c| c.underscore }).include?(method_str.underscore)
+          if next_response_is_raw?
+            disable_raw_response
+            return ent.with_raw_response.go
+          else
+            return ent.go
+          end
+        end
       end
       # Does it match a link, if so traverse it and return the entity.
       @links.each do |key, link|
-        return link.go if method_str == key.underscore
+        if method_str == key.underscore
+          if next_response_is_raw?
+            disable_raw_response
+            return link.with_raw_response.go
+          else
+            return link.go 
+          end
+        end
       end
       # Does it match an action, if so return the action.
       @actions.each do |key, action|

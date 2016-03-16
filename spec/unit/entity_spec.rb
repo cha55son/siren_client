@@ -231,6 +231,19 @@ describe SirenClient::Entity do
       expect { entity.prev_page }.to raise_error Errno::ECONNREFUSED
     end
   end
+  describe '.with_raw_response' do
+    it 'returns the entity' do
+        expect(entity.with_raw_response).to eq(entity)
+    end
+    it 'sets the entity to return a raw response for the `next` request' do
+      entity.with_raw_response
+      expect(entity.next_response_is_raw?).to eq(true)
+    end
+    it 'should still allow a network request to be made' do
+      entity.with_raw_response
+      expect { entity.with_raw_response.prev_page }.to raise_error Errno::ECONNREFUSED
+    end
+  end
   # Entities enumerable support
   describe "enumerable support" do
     describe '.each' do

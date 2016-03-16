@@ -10,6 +10,8 @@ require 'active_support/core_ext/hash'
 
 # SirenClient files
 require "#{dir}/exceptions"
+require "#{dir}/raw_response"
+require "#{dir}/modules/with_raw_response"
 require "#{dir}/link"
 require "#{dir}/field"
 require "#{dir}/action"
