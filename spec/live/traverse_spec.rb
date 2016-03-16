@@ -62,6 +62,9 @@ describe SirenClient do
       expect(client.concepts).to be_a SirenClient::Entity
       expect(client.concepts.links['self'].href).to eq(URL + '/concepts')
     end
+    it 'to follow the link with spaces' do
+      expect(client.concepts_with_spaces).to be_a SirenClient::Entity
+    end
   end
   context 'when accessing an action with GET' do
     it 'to return an action' do
@@ -80,6 +83,9 @@ describe SirenClient do
   context 'when accessing an action with POST' do
     it 'to return an action' do
       expect(client.filter_concepts_post).to be_a SirenClient::Action
+    end
+    it 'to return an action with spaces' do
+      expect(client.filter_concepts_post_with_spaces).to be_a SirenClient::Action
     end
     context 'with .where' do
       it 'to execute the action' do

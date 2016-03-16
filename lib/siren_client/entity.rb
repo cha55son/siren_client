@@ -87,7 +87,7 @@ module SirenClient
       end
       # Does it match an entity sub-link's class?
       @entities.each do |ent|
-        if ent.href && (ent.classes.map { |c| c.underscore }).include?(method_str.underscore)
+        if ent.href && (ent.classes.map { |c| underscore_name c }).include?(underscore_name(method_str))
           if next_response_is_raw?
             disable_raw_response
             return ent.with_raw_response.go
@@ -98,7 +98,7 @@ module SirenClient
       end
       # Does it match a link, if so traverse it and return the entity.
       @links.each do |key, link|
-        if method_str == key.underscore
+        if method_str == underscore_name(key)
           if next_response_is_raw?
             disable_raw_response
             return link.with_raw_response.go
@@ -109,12 +109,16 @@ module SirenClient
       end
       # Does it match an action, if so return the action.
       @actions.each do |key, action|
-        return action if method_str == key.underscore
+        return action if method_str == underscore_name(key)
       end
       raise NoMethodError, "The method \"#{method_str}\" does not match a property, action, or link on SirenClient::Entity."
     end
 
     private
+
+    def underscore_name(str)
+      str.underscore.gsub(' ', '_')
+    end
 
     def parse_data
       return if @payload.nil?
