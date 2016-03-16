@@ -99,6 +99,38 @@ action.fields.each do |field|
 end
 ```
 
+## Accessing the raw response
+
+SirenClient can give you the raw response if needed. Some scenarios where this is useful:
+
+* When the API doesn't return a siren JSON structure.
+* Verifying response headers, status code, etc
+
+You can access the raw response with the following examples:
+
+```ruby
+root = SirentClient.get(...)
+
+# For sub-entities i.e. one named `test_concepts`
+root.with_raw_response.test_concepts
+
+# For links
+root.with_raw_response.concepts
+
+# For actions (this is different from the others)
+root.filter_concepts.with_raw_response.where(...)
+```
+
+Once you get the raw response instance you can call the following functions:
+
+```ruby
+raw.class == SirenClient::RawResponse
+raw.body # Returns the raw body of the response
+raw.code # Returns the HTTP status code
+raw.message # Returns the HTTP message i.e. "OK"
+raw.headers # A hash of the headers in the response
+```
+
 ## Development
 
 Run the following commands to start development:
