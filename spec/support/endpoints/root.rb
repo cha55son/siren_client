@@ -16,6 +16,11 @@ class TestServer < Sinatra::Base
             "href":"#{@@url}/concepts",
             "title": "Concepts"
           },
+          {
+            "rel": ["collection", "concepts with spaces"], 
+            "href":"#{@@url}/concepts",
+            "title": "Concepts"
+          },
           { "rel": ["messages", "collection"],
             "href": "#{@@url}/messages",
             "title":"Messages"
@@ -70,6 +75,7 @@ class TestServer < Sinatra::Base
               }
             ]
           },
+          { "name": "filter concepts post with spaces" },
           {  
             "name":"filter-messages",
             "method":"GET",
