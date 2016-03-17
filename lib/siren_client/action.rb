@@ -1,9 +1,12 @@
 module SirenClient
   class Action
+    include Modules::WithRawResponse
+
     attr_accessor :href
     attr_reader :payload, :name, :classes, :method, :title, :type, :fields, :config
 
     def initialize(data, config={})
+      super()
       if data.class != Hash
         raise ArgumentError, "You must pass in a Hash to SirenClient::Action.new"
       end
@@ -17,8 +20,8 @@ module SirenClient
       @title   = @payload['title']  || ''
       @type    = @payload['type']   || 'application/x-www-form-urlencoded'
       @fields  = @payload['fields'] || []
-      @fields.map! do |data|
-        SirenClient::Field.new(data)
+      @fields.map! do |field_data|
+        SirenClient::Field.new(field_data)
       end
     end
 
@@ -37,7 +40,12 @@ module SirenClient
           SirenClient.logger.debug "  #{k}: #{v}"
         end
         SirenClient.logger.debug '  ' + options[:body].to_query unless options[:body].empty?
-        Entity.new(HTTParty.send(@method.to_sym, @href, options).parsed_response, @config)
+        if next_response_is_raw?
+          disable_raw_response
+          generate_raw_response(self.href, @config)
+        else
+          Entity.new(HTTParty.send(@method.to_sym, @href, options).parsed_response, @config)
+        end
       rescue URI::InvalidURIError => e
         raise InvalidURIError, e.message
       rescue JSON::ParserError => e

@@ -62,6 +62,9 @@ describe SirenClient do
       expect(client.concepts).to be_a SirenClient::Entity
       expect(client.concepts.links['self'].href).to eq(URL + '/concepts')
     end
+    it 'to follow the link with spaces' do
+      expect(client.concepts_with_spaces).to be_a SirenClient::Entity
+    end
   end
   context 'when accessing an action with GET' do
     it 'to return an action' do
@@ -81,6 +84,9 @@ describe SirenClient do
     it 'to return an action' do
       expect(client.filter_concepts_post).to be_a SirenClient::Action
     end
+    it 'to return an action with spaces' do
+      expect(client.filter_concepts_post_with_spaces).to be_a SirenClient::Action
+    end
     context 'with .where' do
       it 'to execute the action' do
         params = { search: 'obama' }
@@ -98,4 +104,40 @@ describe SirenClient do
       expect(concepts).to be_a SirenClient::Entity
     end
   end
+  context 'when accessing the raw response' do
+    context 'links' do
+      it 'to return a RawResponse instance' do
+        expect(client.with_raw_response.concepts).to be_a SirenClient::RawResponse
+      end
+      it 'to return an Entity on the second request' do
+        client.with_raw_response.concepts
+        expect(client.concepts).to be_a SirenClient::Entity
+      end
+    end
+    context 'actions' do
+      params = { search: 'obama' }
+      it 'to return a RawResponse instance' do
+        expect(client.filter_concepts_get.with_raw_response.where(params)).to be_a SirenClient::RawResponse
+      end
+      it 'to return an Entity on the second request' do
+        client.filter_concepts_get.with_raw_response.where(params)
+        expect(client.concepts).to be_a SirenClient::Entity
+      end
+    end
+    it 'to provide the raw body' do
+      expect(client.with_raw_response.concepts.body).to eq(HTTParty.get(URL + '/concepts', basic_auth: { username: 'admin', password: '1234' }).body)
+    end
+    it 'to provide the raw status code' do
+      expect(client.with_raw_response.concepts.code).to eq(200)
+    end
+    it 'to provide the raw message' do
+      expect(client.with_raw_response.concepts.message).to eq("OK")
+    end
+    it 'to provide the raw headers' do
+      expect(client.with_raw_response.concepts.headers).to include(
+        "content-type", "content-length", "server", "date", "connection"
+      )
+    end
+  end
+
 end

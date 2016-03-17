@@ -1,9 +1,12 @@
 module SirenClient
   class Link
+    include Modules::WithRawResponse
+
     attr_accessor :href
     attr_reader :payload, :rels, :title, :type, :config
     
     def initialize(data, config={})
+      super()
       if data.class != Hash
         raise ArgumentError, "You must pass in a Hash to SirenClient::Link.new"
       end
@@ -17,7 +20,12 @@ module SirenClient
     end
 
     def go
-      Entity.new(self.href, @config)
+      if next_response_is_raw?
+        disable_raw_response
+        generate_raw_response(self.href, @config)
+      else
+        Entity.new(self.href, @config)
+      end
     end
   end
 end
