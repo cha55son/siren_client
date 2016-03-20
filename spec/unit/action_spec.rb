@@ -2,6 +2,8 @@ require 'helper/spec_helper'
 
 describe SirenClient::Action do
   let (:action_data) { {"name"=>"search","method"=>"GET","href"=>"http://example.com/products","fields"=>[{"name"=>"search","type"=>"text"}]} }
+  let (:action_data_post) { {"name"=>"search","method"=>"POST","href"=>"http://example.com/products","fields"=>[{"name"=>"search","type"=>"text"}]} }
+  let (:action_data_delete) { {"name"=>"delete","method"=>"DELETE","href"=>"http://example.com/products"} }
 
   describe '.new(data)' do
       it 'raise an error if wrong type is provided' do
@@ -12,10 +14,16 @@ describe SirenClient::Action do
       end
   end
 
-  let (:action) { 
-    SirenClient::Action.new(action_data, { 
-      headers: { "Accept" => "application/json" } 
+  let (:action) {
+    SirenClient::Action.new(action_data, {
+      headers: { "Accept" => "application/json" }
     })
+  }
+  let (:action_post) {
+    SirenClient::Action.new(action_data_post)
+  }
+  let (:action_delete) {
+    SirenClient::Action.new(action_data_delete)
   }
   describe '.config' do
     it 'is a hash' do
@@ -81,10 +89,22 @@ describe SirenClient::Action do
     end
   end
   describe '.where(params)' do
-    it 'executes the action without any parameters' do
+    it 'executes the GET action' do
       # I'm expecting an error here, all I want to see is that the url it being traversed.
-      expect { action.where }.to raise_error SirenClient::InvalidResponseError
+      expect { action.where(test: 'hi') }.to raise_error SirenClient::InvalidResponseError
+    end
+    it 'executes the POST action' do
+      # I'm expecting an error here, all I want to see is that the url it being traversed.
+      expect { action_post.where(test: 'hi') }.to raise_error SirenClient::InvalidResponseError
+    end
+    it 'executes the DELETE action' do
+      expect { action_delete.submit }.to raise_error SirenClient::InvalidResponseError
     end
     # The rest will be tested in the live specs.
+  end
+  describe '.submit' do
+    it 'executes the action without any parameters' do
+      expect { action.submit }.to raise_error SirenClient::InvalidResponseError
+    end
   end
 end

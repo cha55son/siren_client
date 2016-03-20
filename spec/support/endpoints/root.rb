@@ -12,12 +12,12 @@ class TestServer < Sinatra::Base
             "href":"#{@@url}/"
           },
           {
-            "rel": ["collection", "concepts"], 
+            "rel": ["collection", "concepts"],
             "href":"#{@@url}/concepts",
             "title": "Concepts"
           },
           {
-            "rel": ["collection", "concepts with spaces"], 
+            "rel": ["collection", "concepts with spaces"],
             "href":"#{@@url}/concepts",
             "title": "Concepts"
           },
@@ -26,49 +26,61 @@ class TestServer < Sinatra::Base
             "title":"Messages"
           }
         ],
-        "actions": [  
-          {  
+        "actions": [
+          {
             "name":"filter-concepts-get",
             "method":"GET",
             "href":"#{@@url}/concepts",
             "title":"Get an optionally filtered list of Concepts",
             "type":"application/x-www-form-urlencoded",
-            "fields":[  
-              {  
+            "fields":[
+              {
                 "name":"limit",
                 "title":"Max number of results in each page",
                 "type":"number"
               },
-              {  
+              {
                 "name":"page",
                 "title":"Page number, starting at 1",
                 "type":"number"
               },
-              {  
+              {
                 "name":"search",
                 "title":"Keyword search on concept text",
                 "type":"text"
               }
             ]
           },
-          {  
+          {
+            "name": "delete-concept",
+            "method": "DELETE",
+            "href": "#{@@url}/concepts",
+            "title": "Delete a concept",
+            "type": "application/x-www-form-urlencoded",
+            "fields": [{
+              "name": "id",
+              "title": "ID of the concept to delete.",
+              "type": "text"
+            }]
+          },
+          {
             "name":"filter-concepts-post",
             "method":"POST",
             "href":"#{@@url}/concepts",
             "title":"Get an optionally filtered list of Concepts",
             "type":"application/x-www-form-urlencoded",
-            "fields":[  
-              {  
+            "fields":[
+              {
                 "name":"limit",
                 "title":"Max number of results in each page",
                 "type":"number"
               },
-              {  
+              {
                 "name":"page",
                 "title":"Page number, starting at 1",
                 "type":"number"
               },
-              {  
+              {
                 "name":"search",
                 "title":"Keyword search on concept text",
                 "type":"text"
@@ -76,24 +88,24 @@ class TestServer < Sinatra::Base
             ]
           },
           { "name": "filter concepts post with spaces" },
-          {  
+          {
             "name":"filter-messages",
             "method":"GET",
             "href":"#{@@url}/messages",
             "title":"Get an optionally filtered list of Messages",
             "type":"application/x-www-form-urlencoded",
-            "fields":[  
-              {  
+            "fields":[
+              {
                 "name":"limit",
                 "title":"Max number of results in each page",
                 "type":"number"
               },
-              {  
+              {
                 "name":"page",
                 "title":"Page number, starting at 1",
                 "type":"number"
               },
-              {  
+              {
                 "name":"search",
                 "title":"Keyword search on message body",
                 "type":"number"

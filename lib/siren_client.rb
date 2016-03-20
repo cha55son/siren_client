@@ -3,7 +3,6 @@ require "#{dir}/version"
 
 # Dependencies
 require 'json'
-require 'logger'
 require 'httparty'
 require 'active_support/inflector'
 require 'active_support/core_ext/hash'

@@ -1,14 +1,15 @@
 class TestServer < Sinatra::Base
   CON_1 = <<-EOF
-    {  
+    {
       "class":["concepts"],
       "rel":["/rels/concepts"],
-      "properties":{  
+      "properties":{
+        "id": 1,
         "text":"barack obama",
         "category":"PERSON"
       },
-      "links":[  
-        {  
+      "links":[
+        {
           "rel":["self"],
           "href":"#{@@url}/concepts/1"
         }
@@ -16,15 +17,16 @@ class TestServer < Sinatra::Base
     }
   EOF
   CON_2 = <<-EOF
-    {  
+    {
       "class":["concepts"],
       "rel":["/rels/concepts"],
-      "properties":{  
+      "properties":{
+        "id": 2,
         "text":"tennessee",
         "category":"LOCATION"
       },
-      "links":[  
-        {  
+      "links":[
+        {
           "rel":["self"],
           "href":"#{@@url}/concepts/2"
         }
@@ -47,6 +49,14 @@ class TestServer < Sinatra::Base
       }
     EOF
   end
+  delete '/concepts/?' do
+    <<-EOF
+      {
+        "class":["status"],
+        "properties": { "success": true }
+      }
+    EOF
+  end
   get '/concepts/?' do
     query = (request.query_string.length > 0 ? '?' : '') + request.query_string
     # search=obama
@@ -66,14 +76,14 @@ class TestServer < Sinatra::Base
       EOF
     else
       <<-EOF
-        {  
+        {
           "class":["concepts","collection"],
-          "properties":{  
+          "properties":{
             "count":2
           },
           "entities":[#{CON_1}, #{CON_2}],
-          "links":[  
-            {  
+          "links":[
+            {
               "rel":["self"],
               "href":"#{@@url}/concepts#{query}"
             }
