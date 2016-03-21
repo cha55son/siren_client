@@ -16,8 +16,11 @@ module SirenClient
           raise InvalidURIError, 'An invalid url was passed to SirenClient::Entity.new.'
         end
         begin
-          SirenClient.logger.debug "GET #{data}"
-          @payload = HTTParty.get(data, @config).parsed_response
+          resp = generate_raw_response(:get, data, @config)
+          if resp.parsed_response.nil?
+            raise InvalidResponseError.new "Response could not be parsed. Code=#{resp.code} Message=\"#{resp.message}\" Body=#{resp.body}"
+          end
+          @payload = resp.parsed_response
         rescue URI::InvalidURIError => e
           raise InvalidURIError, e.message
         rescue JSON::ParserError => e
@@ -39,8 +42,8 @@ module SirenClient
       else
         if next_response_is_raw?
           disable_raw_response
-          @entities[i].with_raw_response.go 
-        else 
+          @entities[i].with_raw_response.go
+        else
           @entities[i].go
         end
       end
@@ -72,7 +75,7 @@ module SirenClient
       return if self.href.empty?
       if next_response_is_raw?
         disable_raw_response
-        generate_raw_response(self.href, @config)
+        generate_raw_response(:get, self.href, @config)
       else
         self.class.new(self.href, @config)
       end
@@ -103,7 +106,7 @@ module SirenClient
             disable_raw_response
             return link.with_raw_response.go
           else
-            return link.go 
+            return link.go
           end
         end
       end

@@ -12,7 +12,7 @@ end
 
 describe SirenClient do
   context 'when creating an entity' do
-    let (:headers_ent) { 
+    let (:headers_ent) {
       SirenClient.get({
         url: URL,
         basic_auth: { username: 'admin', password: '1234' },
@@ -22,7 +22,7 @@ describe SirenClient do
     it 'can set HTTP headers' do
       expect {
         expect(headers_ent.config[:headers]).to be_a Hash
-        expect(headers_ent.config[:headers]).to eq({ 
+        expect(headers_ent.config[:headers]).to eq({
           "Accept" => "application/json"
         })
       }.to_not raise_error
@@ -34,14 +34,14 @@ describe SirenClient do
     end
   end
 
-  let (:client) { 
+  let (:client) {
 
     SirenClient.get(
-      url: URL, 
+      url: URL,
       timeout: 2,
       basic_auth: { username: 'admin', password: '1234' },
       headers: { "Accept" => "application/json" }
-    ) 
+    )
   }
   context 'when accessing the root entity' do
     it 'to return an entity' do
@@ -97,6 +97,21 @@ describe SirenClient do
       end
     end
   end
+  context 'when executing an action with DELETE' do
+    it 'returns a siren response' do
+      expect(client.delete_concept.where(id: 1)).to be_a SirenClient::Entity
+    end
+  end
+  # Typically this will be called directly on a resource
+  # without any additional parameters.
+  context 'when executing a `text/plain` action' do
+    it 'returns a 404 without the body being set correctly' do
+      expect { client.messages[0].update_message.submit }.to raise_error(/Code=404/)
+    end
+    it 'returns a siren response' do
+      expect(client.messages[0].update_message.where('this is the new message')).to be_a SirenClient::Entity
+    end
+  end
 
   let (:concepts) { SirenClient.get({ url: URL, basic_auth: { username: 'admin', password: '1234' }}).concepts }
   context 'when accessing an entity' do
@@ -122,6 +137,11 @@ describe SirenClient do
       it 'to return an Entity on the second request' do
         client.filter_concepts_get.with_raw_response.where(params)
         expect(client.concepts).to be_a SirenClient::Entity
+      end
+      it 'to return the correct concept' do
+        concepts_raw = client.filter_concepts_get.with_raw_response.where(params)
+        expect(concepts_raw.body).to match(/"count": 1/)
+        expect(concepts_raw.body).to match(/("text":"barack obama"){1}/)
       end
     end
     it 'to provide the raw body' do

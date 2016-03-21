@@ -12,7 +12,7 @@ module SirenClient
       end
       @payload = data
 
-      @config = { format: :json }.merge config 
+      @config = { format: :json }.merge config
       @name    = @payload['name']   || ''
       @classes = @payload['class']  || []
       @method  = (@payload['method'] || 'GET').downcase
@@ -34,17 +34,15 @@ module SirenClient
       end
       options[:headers]['Content-Type'] = @type
       begin
-        query = options[:query].empty? ? '' : ('?' + options[:query].to_query)
-        SirenClient.logger.debug "#{@method.upcase} #{@href}#{query}"
-        options[:headers].each do |k, v|
-          SirenClient.logger.debug "  #{k}: #{v}"
-        end
-        SirenClient.logger.debug '  ' + options[:body].to_query unless options[:body].empty?
+        resp = generate_raw_response(@method, self.href, options)
         if next_response_is_raw?
           disable_raw_response
-          generate_raw_response(self.href, @config)
+          resp
         else
-          Entity.new(HTTParty.send(@method.to_sym, @href, options).parsed_response, @config)
+          if resp.parsed_response.nil?
+            raise InvalidResponseError.new "Response could not be parsed. Code=#{resp.code} Message=\"#{resp.message}\" Body=#{resp.body}"
+          end
+          Entity.new(resp.parsed_response, @config)
         end
       rescue URI::InvalidURIError => e
         raise InvalidURIError, e.message
@@ -52,5 +50,8 @@ module SirenClient
         raise InvalidResponseError, e.message
       end
     end
+    # `.submit` should be used with actions that
+    # don't require any parameters, for readability.
+    alias_method :submit, :where
   end
 end
