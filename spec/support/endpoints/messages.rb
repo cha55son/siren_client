@@ -54,38 +54,20 @@ class TestServer < Sinatra::Base
     end
   end
   get '/messages/?' do
-    query = (request.query_string.length > 0 ? '?' : '') + request.query_string
-    # search=obama
-    if request.params['search']
-      <<-EOF
-        {
-          "class":["messages","collection"],
-          "properties": { "count": 1 },
-          "entities": [#{MSG_1}],
-          "links": [
-            {
-              "rel": ["self"],
-              "href": "#{@@url}/messages#{query}"
-            }
-          ]
-        }
-      EOF
-    else
-      <<-EOF
-        {
-          "class":["messages","collection"],
-          "properties":{
-            "count":2
-          },
-          "entities":[#{MSG_1}, #{MSG_2}],
-          "links":[
-            {
-              "rel":["self"],
-              "href":"#{@@url}/messages#{query}"
-            }
-          ]
-        }
-      EOF
-    end
+    <<-EOF
+      {
+        "class":["messages","collection"],
+        "properties":{
+          "count":2
+        },
+        "entities":[#{MSG_1}, #{MSG_2}],
+        "links":[
+          {
+            "rel":["self"],
+            "href":"#{@@url}/messages"
+          }
+        ]
+      }
+    EOF
   end
 end

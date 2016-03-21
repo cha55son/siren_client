@@ -87,31 +87,7 @@ class TestServer < Sinatra::Base
               }
             ]
           },
-          { "name": "filter concepts post with spaces" },
-          {
-            "name":"filter-messages",
-            "method":"GET",
-            "href":"#{@@url}/messages",
-            "title":"Get an optionally filtered list of Messages",
-            "type":"application/x-www-form-urlencoded",
-            "fields":[
-              {
-                "name":"limit",
-                "title":"Max number of results in each page",
-                "type":"number"
-              },
-              {
-                "name":"page",
-                "title":"Page number, starting at 1",
-                "type":"number"
-              },
-              {
-                "name":"search",
-                "title":"Keyword search on message body",
-                "type":"number"
-              }
-            ]
-          }
+          { "name": "filter concepts post with spaces" }
         ]
       }
     EOF

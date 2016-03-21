@@ -105,6 +105,9 @@ describe SirenClient do
   # Typically this will be called directly on a resource
   # without any additional parameters.
   context 'when executing a `text/plain` action' do
+    it 'returns a 404 without the body being set correctly' do
+      expect { client.messages[0].update_message.submit }.to raise_error(/Code=404/)
+    end
     it 'returns a siren response' do
       expect(client.messages[0].update_message.where('this is the new message')).to be_a SirenClient::Entity
     end
