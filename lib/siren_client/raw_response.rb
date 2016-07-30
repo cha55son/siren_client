@@ -1,5 +1,7 @@
 module SirenClient
   class RawResponse
+    attr_accessor :response
+
     def initialize(http_res)
         unless http_res.class == HTTParty::Response
           raise InvalidResponseError, "SirenClient::RawResponse expects a HTTParty::Response instance."
@@ -7,8 +9,12 @@ module SirenClient
         @response = http_res
     end
 
+    def parsed_response
+      @response.parsed_response
+    end
+
     def body
-      @response.body 
+      @response.body
     end
 
     def code

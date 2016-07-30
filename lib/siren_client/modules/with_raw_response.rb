@@ -18,10 +18,10 @@ module SirenClient
         @_next_response_is_raw
       end
 
-      private 
+      private
 
-      def generate_raw_response(url, config)
-        RawResponse.new HTTParty.get(url, config)
+      def generate_raw_response(method, url, config)
+        RawResponse.new HTTParty.send(method.to_sym, url, config)
       end
     end
   end
