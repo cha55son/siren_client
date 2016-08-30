@@ -37,6 +37,11 @@ describe SirenClient::Entity do
     it 'is a hash' do
       expect(entity.payload).to be_a Hash
     end
+    it 'is NOT overwritten with SirenClient classes' do
+      expect(entity.payload['entities'][0]).to be_a Hash
+      expect(entity.payload['actions'][0]).to be_a Hash
+      expect(entity.payload['links'][0]).to be_a Hash
+    end
   end
   describe '.classes' do
     it 'is an array' do
