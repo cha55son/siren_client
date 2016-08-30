@@ -32,6 +32,6 @@ Gem::Specification.new do |spec|
   # Conditional deps.
   spec.add_development_dependency "json", "1.7.7" if RUBY_VERSION < '2'
   spec.add_development_dependency "tins", "1.6.0" if RUBY_VERSION < '2'
-  spec.add_development_dependency "listen", "2.10.1" if RUBY_VERSION <= '2.2.0'
+  spec.add_development_dependency "listen", "2.10.1" if RUBY_VERSION <= '2.2.5'
   spec.add_development_dependency "byebug" if RUBY_VERSION > "2" && RUBY_PLATFORM != "java"
 end
