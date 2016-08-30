@@ -30,8 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "coveralls"
 
-  if RUBY_VERSION < '2.3'
-    spec.add_development_dependency "tins", "1.6.0"
-    spec.add_development_dependency "listen", "3.1.1"
-  end
+  spec.add_development_dependency "json", "1.7.7" if RUBY_VERSION < '2'
+  spec.add_development_dependency "tins", "1.6.0" if RUBY_VERSION < '2'
+  spec.add_development_dependency "listen", "2.10.1" if RUBY_VERSION < '2.2'
 end
