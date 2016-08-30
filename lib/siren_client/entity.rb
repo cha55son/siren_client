@@ -125,14 +125,14 @@ module SirenClient
 
     def parse_data
       return if @payload.nil?
-      @classes    = @payload['class']      || []
-      @properties = @payload['properties'] || { }
-      @entities   = @payload['entities']   || []
+      @classes    = (@payload['class']      || []).clone
+      @properties = (@payload['properties'] || { }).clone
+      @entities   = (@payload['entities']   || []).clone
       @entities.map! do |data|
         self.class.new(data, @config)
       end
-      @rels  = @payload['rel']   || []
-      @links = @payload['links'] || []
+      @rels  = (@payload['rel']   || []).clone
+      @links = (@payload['links'] || []).clone
       @links.map! do |data|
         Link.new(data, @config)
       end
@@ -150,7 +150,7 @@ module SirenClient
         hash[hash_rel] = link
         hash
       end
-      @actions = @payload['actions'] || []
+      @actions = (@payload['actions'] || []).clone
       @actions.map! do |data|
         Action.new(data, @config)
       end
