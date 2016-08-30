@@ -20,17 +20,18 @@ Gem::Specification.new do |spec|
   spec.add_dependency "httparty", "~> 0.13"
   spec.add_dependency "activesupport", "~> 4"
 
-  spec.add_development_dependency "bundler", "~> 1.5"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rack"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "sinatra"
   spec.add_development_dependency "rspec"
-  spec.add_development_dependency "byebug" if RUBY_VERSION > "2" && RUBY_PLATFORM != "java"
   spec.add_development_dependency "guard"
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "coveralls"
 
+  # Conditional deps.
   spec.add_development_dependency "json", "1.7.7" if RUBY_VERSION < '2'
   spec.add_development_dependency "tins", "1.6.0" if RUBY_VERSION < '2'
-  spec.add_development_dependency "listen", "2.10.1" if RUBY_VERSION < '2.2'
+  spec.add_development_dependency "listen", "2.10.1" if RUBY_VERSION <= '2.2.0'
+  spec.add_development_dependency "byebug" if RUBY_VERSION > "2" && RUBY_PLATFORM != "java"
 end
