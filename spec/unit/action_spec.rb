@@ -37,6 +37,9 @@ describe SirenClient::Action do
     it 'is a hash' do
       expect(action.payload).to be_a Hash
     end
+    it 'is NOT overwritten with SirenClient::Field classes' do
+      expect(action.payload['fields'][0]).to be_a Hash
+    end
   end
   describe '.name' do
     it 'is a string' do
