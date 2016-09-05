@@ -14,12 +14,12 @@ module SirenClient
 
       @config = { format: :json }.merge config
       @name    = @payload['name']   || ''
-      @classes = @payload['class']  || []
+      @classes = (@payload['class']  || []).clone
       @method  = (@payload['method'] || 'GET').downcase
       @href    = @payload['href']   || ''
       @title   = @payload['title']  || ''
       @type    = @payload['type']   || 'application/x-www-form-urlencoded'
-      @fields  = @payload['fields'] || []
+      @fields  = (@payload['fields'] || []).clone
       @fields.map! do |field_data|
         SirenClient::Field.new(field_data)
       end
