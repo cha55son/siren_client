@@ -18,10 +18,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "httparty", "~> 0.13"
-  spec.add_dependency "activesupport", "~> 4"
+  spec.add_dependency "activesupport", ">= 4"
 
   spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rack"
+  spec.add_development_dependency "rack", "~> 1.5"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "sinatra"
   spec.add_development_dependency "rspec"
