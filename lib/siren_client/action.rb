@@ -31,8 +31,11 @@ module SirenClient
         options[:query] = params
       else
         options[:body] = params
+
+        # Only set the Content-Type if this isn't a GET request
+        options[:headers]['Content-Type'] = @type
       end
-      options[:headers]['Content-Type'] = @type
+
       begin
         resp = generate_raw_response(@method, self.href, options)
         if next_response_is_raw?
