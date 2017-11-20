@@ -26,13 +26,13 @@ module SirenClient
     end
 
     def where(params = {})
-      options = { headers: {}, query: {}, body: {} }.merge @config
+      options = { headers: {} }.merge @config
       if @method == 'get'
         options[:query] = params
       else
         options[:body] = params
 
-        # Only set the Content-Type if this isn't a GET request
+        # Only set the Content-Type if we have a body
         options[:headers]['Content-Type'] = @type
       end
 
