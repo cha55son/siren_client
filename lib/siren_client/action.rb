@@ -26,13 +26,16 @@ module SirenClient
     end
 
     def where(params = {})
-      options = { headers: {}, query: {}, body: {} }.merge @config
+      options = { headers: {} }.merge @config
       if @method == 'get'
         options[:query] = params
       else
         options[:body] = params
+
+        # Only set the Content-Type if we have a body
+        options[:headers]['Content-Type'] = @type
       end
-      options[:headers]['Content-Type'] = @type
+
       begin
         resp = generate_raw_response(@method, self.href, options)
         if next_response_is_raw?

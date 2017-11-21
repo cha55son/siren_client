@@ -14,16 +14,24 @@ describe SirenClient::Action do
       end
   end
 
+  let (:output_buffer) {
+    StringIO.new
+  }
   let (:action) {
     SirenClient::Action.new(action_data, {
-      headers: { "Accept" => "application/json" }
+      headers: { "Accept" => "application/json" },
+      debug_output: output_buffer
     })
   }
   let (:action_post) {
-    SirenClient::Action.new(action_data_post)
+    SirenClient::Action.new(action_data_post, {
+      debug_output: output_buffer
+    })
   }
   let (:action_delete) {
-    SirenClient::Action.new(action_data_delete)
+    SirenClient::Action.new(action_data_delete, {
+      debug_output: output_buffer
+    })
   }
   describe '.config' do
     it 'is a hash' do
@@ -96,9 +104,17 @@ describe SirenClient::Action do
       # I'm expecting an error here, all I want to see is that the url it being traversed.
       expect { action.where(test: 'hi') }.to raise_error SirenClient::InvalidResponseError
     end
+    it 'GET action does not send the Content-Type header' do
+      expect { action.where(test: 'hi') }.to raise_error SirenClient::InvalidResponseError
+      expect(output_buffer.string).not_to include('Content-Type: application/x-www-form-urlencoded')
+    end
     it 'executes the POST action' do
       # I'm expecting an error here, all I want to see is that the url it being traversed.
       expect { action_post.where(test: 'hi') }.to raise_error SirenClient::InvalidResponseError
+    end
+    it 'POST action does send the Content-Type header' do
+      expect { action_post.where(test: 'hi') }.to raise_error SirenClient::InvalidResponseError
+      expect(output_buffer.string).to include('Content-Type: application/x-www-form-urlencoded')
     end
     it 'executes the DELETE action' do
       expect { action_delete.submit }.to raise_error SirenClient::InvalidResponseError
