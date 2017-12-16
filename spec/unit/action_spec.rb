@@ -1,7 +1,7 @@
 require 'helper/spec_helper'
 
 describe SirenClient::Action do
-  let (:action_data) { {"name"=>"search","method"=>"GET","href"=>"http://example.com/products","fields"=>[{"name"=>"search","type"=>"text"}]} }
+  let (:action_data) { {"name"=>"search","method"=>"GET","href"=>"http://example.com/products", "class"=>["test"], "title"=>"test", "type"=>"text/html", "fields"=>[{"name"=>"search"}]} }
   let (:action_data_post) { {"name"=>"search","method"=>"POST","href"=>"http://example.com/products","fields"=>[{"name"=>"search","type"=>"text"}]} }
   let (:action_data_delete) { {"name"=>"delete","method"=>"DELETE","href"=>"http://example.com/products"} }
 
@@ -62,5 +62,80 @@ describe SirenClient::Action do
 
         it_behaves_like 'a SirenClient::Action'
       end
+  end
+
+  describe 'when initialized with no data' do
+    let (:action) {
+      subject.new({ "fields" => [{}] }, {
+        headers: {},
+        debug_output: output_buffer
+      })
+    }
+
+    describe '.payload' do
+      it 'is a hash' do
+        expect(action.payload).to be_a Hash
+      end
+      it 'is NOT overwritten with SirenClient::Field classes' do
+        expect(action.payload['fields'][0]).to be_a Hash
+      end
+    end
+
+    describe '.name' do
+      it 'is a string' do
+        expect(action.name).to be_a String
+      end
+    end
+
+    describe '.classes' do
+      it 'is an array' do
+        expect(action.classes).to be_a Array
+      end
+    end
+
+    describe '.method' do
+      it 'is a string' do
+        expect(action.method).to be_a String
+      end
+      it 'defaults to GET' do
+        expect(subject.new({ }).method).to eq('get')
+      end
+    end
+
+    describe '.href' do
+      it 'is a string' do
+        expect(action.href).to be_a String
+      end
+      it 'can change .href as needed' do
+        action.href = action.href + '?query=test'
+        expect(/query=test/).to match(action.href)
+      end
+    end
+
+    describe '.title' do
+      it 'is a string' do
+        expect(action.title).to be_a String
+      end
+    end
+
+    describe '.type' do
+      it 'is a string' do
+        expect(action.type).to be_a String
+      end
+      it 'defaults to \'application/x-www-form-urlencoded\'' do
+        expect(action.type).to eq('application/x-www-form-urlencoded')
+      end
+    end
+
+    describe '.fields' do
+      it 'is an array' do
+        expect(action.fields).to be_a Array
+      end
+      it 'is an array of SirenClient::Field\'s' do
+        action.fields.each do |field|
+          expect(field).to be_a SirenClient::Field
+        end
+      end
     end
   end
+end
