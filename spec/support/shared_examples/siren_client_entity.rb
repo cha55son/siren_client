@@ -108,8 +108,8 @@ shared_examples 'a SirenClient::Entity' do
     end
 
     it 'can change .href as needed' do
-        entity.href = 'http://example.com?query=test'
-        expect(/query=test/).to match(entity.href)
+      entity.href = 'http://example.com?query=test'
+      expect(/query=test/).to match(entity.href)
     end
   end
 
