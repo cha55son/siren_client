@@ -27,7 +27,7 @@ module SirenClient
           raise InvalidResponseError, e.message
         end
       elsif data.class == Hash
-        @payload = data
+        @payload = data.deep_stringify_keys
       else
         raise ArgumentError, "You must pass in either a url(String) or an entity(Hash) to SirenClient::Entity.new"
       end

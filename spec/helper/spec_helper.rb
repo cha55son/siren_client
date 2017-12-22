@@ -2,6 +2,7 @@ require 'byebug' if RUBY_VERSION > '2' && RUBY_PLATFORM != "java"
 require 'siren_client'
 require 'coveralls'
 Coveralls.wear!
+Dir["./spec/support/shared_examples/*.rb"].sort.each {|f| require f}
 
 RSpec.configure do |config|
   # Ensure we only use `expect` and not `should`.

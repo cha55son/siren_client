@@ -10,7 +10,7 @@ module SirenClient
       if data.class != Hash
         raise ArgumentError, "You must pass in a Hash to SirenClient::Action.new"
       end
-      @payload = data
+      @payload = data.deep_stringify_keys
 
       @config = { format: :json }.merge config
       @name    = @payload['name']   || ''
